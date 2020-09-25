@@ -57,3 +57,6 @@ Meat Puppet is a Unity asset that quickly and easily gives humanoid characters l
 * Meat Puppet can also be used to control the player!
 
 ![Player Controller](https://github.com/BrianLandes/Meat-Puppet/blob/master/Page_Images/Player%20Controller.gif?raw=true)
+
+### Credits
+Animations and character were obtained from [Mixamo](https://www.mixamo.com/).

@@ -41,6 +41,11 @@ Meat Puppet is a Unity asset that quickly and easily gives humanoid characters l
 ![Stairs](https://github.com/BrianLandes/Meat-Puppet/blob/master/Page_Images/Steps.gif?raw=true)
 ![Slopes](https://github.com/BrianLandes/Meat-Puppet/blob/master/Page_Images/Slopes.gif?raw=true)
 
+* Playing custom animations on the character simply involves either starting/stopping a looping animation, or firing a 'one-shot' animation.
+
+![Looping Animations](https://github.com/BrianLandes/Meat-Puppet/blob/master/Page_Images/Looping%20Animations.gif?raw=true)
+![One Shot Animations](https://github.com/BrianLandes/Meat-Puppet/blob/master/Page_Images/One%20Shot%20Animations.gif?raw=true)
+
 
 * Supports moving and spinning platforms.
 

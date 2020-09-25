@@ -7,7 +7,14 @@ namespace PBG.MeatPuppet {
 
 		#region Settings
 
+		[Tooltip("Whether to use the 'walking' animation and speed, or the 'running' animation and speed.")]
 		public bool running = false;
+
+		[Tooltip("(Optional) The puppet's initial destination on start.")]
+		public Transform initialMoveTarget;
+		
+		[Tooltip("(Optional) The puppet's initial facing target on start.")]
+		public Transform initialFacingTarget;
 		
 		public MovementSettings movementSettings;
 
@@ -90,6 +97,9 @@ namespace PBG.MeatPuppet {
 
 		public void Start() {
 			GrowParts();
+
+			Movement.MoveTargetTransform = initialMoveTarget;
+			Movement.FacingTargetTransform = initialFacingTarget;
 		}
 
 		public void OnEnable() {

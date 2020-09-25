@@ -179,6 +179,13 @@ MonoBehaviour:
   staticLayer:
     serializedVersion: 2
     m_Bits: 0
+  characterPhysicMaterial: {fileID: 0}
+  forwardSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &6037857
 Transform:
   m_ObjectHideFlags: 0
@@ -672,13 +679,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -688,9 +695,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1 &252882824
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +865,6 @@ Transform:
   - {fileID: 840110759}
   - {fileID: 1718446694}
   - {fileID: 1097908923}
-  - {fileID: 1917278445}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -888,7 +900,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &382482561
 Rigidbody:
@@ -1180,7 +1192,6 @@ Transform:
   - {fileID: 1637971530}
   - {fileID: 857441997}
   - {fileID: 1028446855}
-  - {fileID: 540214495}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1247,7 +1258,6 @@ Transform:
   - {fileID: 2039622404}
   - {fileID: 4334980}
   - {fileID: 1177867504}
-  - {fileID: 1089724293}
   - {fileID: 1807339321}
   - {fileID: 2058457776}
   - {fileID: 1452716949}
@@ -1434,8 +1444,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.24068685, y: -0.37614316, z: 0.10184345, w: 0.8889399}
-  m_LocalPosition: {x: 8.628067, y: 3.2092938, z: 6.518502}
+  m_LocalRotation: {x: 0.24081723, y: -0.37612817, z: 0.10189861, w: 0.8889046}
+  m_LocalPosition: {x: 8.765944, y: 3.1951587, z: 6.3847504}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1466,12 +1476,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 540214494}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.741, y: 0.48, z: -0.924}
+  m_LocalScale: {x: 0.5333336, y: 2.1470015, z: 0.60103405}
   m_Children: []
-  m_Father: {fileID: 404215428}
-  m_RootOrder: 6
+  m_Father: {fileID: 1644885153}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!102 &540214496
 TextMesh:
@@ -1483,7 +1493,7 @@ TextMesh:
   m_GameObject: {fileID: 540214494}
   m_Text: Collider Only
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -1625,13 +1635,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -1641,9 +1651,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1 &630427770
 GameObject:
   m_ObjectHideFlags: 0
@@ -1676,7 +1692,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 21
+  m_RootOrder: 20
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &630427772
 Rigidbody:
@@ -1779,7 +1795,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 639970670}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
+  m_LocalPosition: {x: 0.82, y: -1.08, z: -1.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1493948277}
@@ -1795,7 +1811,7 @@ TextMesh:
   m_GameObject: {fileID: 639970670}
   m_Text: Spinning Only
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -1875,7 +1891,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.3388605, y: -0.5658381, z: 5.0755553}
   m_LocalScale: {x: 1.6638, y: 0.4657659, z: 1.875}
-  m_Children: []
+  m_Children:
+  - {fileID: 1917278445}
   m_Father: {fileID: 292058700}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2092,7 +2109,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &725093767
 Rigidbody:
@@ -2352,7 +2369,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &871222798
 Rigidbody:
@@ -2461,7 +2478,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &899650454
 Rigidbody:
@@ -2569,7 +2586,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.3388605, y: -0.5658381, z: 5.0755553}
   m_LocalScale: {x: 1.6638, y: 0.4657659, z: 1.875}
-  m_Children: []
+  m_Children:
+  - {fileID: 1089724293}
   m_Father: {fileID: 485302732}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2809,13 +2827,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -2825,9 +2843,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1 &1089724292
 GameObject:
   m_ObjectHideFlags: 0
@@ -2840,7 +2864,7 @@ GameObject:
   - component: {fileID: 1089724295}
   - component: {fileID: 1089724294}
   m_Layer: 0
-  m_Name: New Text
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2853,12 +2877,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1089724292}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.741, y: 0.48, z: -0.924}
+  m_LocalScale: {x: 0.5333336, y: 2.1470015, z: 0.60103405}
   m_Children: []
-  m_Father: {fileID: 485302732}
-  m_RootOrder: 6
+  m_Father: {fileID: 946197327}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!102 &1089724294
 TextMesh:
@@ -2870,7 +2894,7 @@ TextMesh:
   m_GameObject: {fileID: 1089724292}
   m_Text: Rigidbody Using Force
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -3012,13 +3036,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -3028,9 +3052,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1001 &1122322186
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3124,13 +3154,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -3140,9 +3170,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1 &1158116081
 GameObject:
   m_ObjectHideFlags: 0
@@ -3175,7 +3211,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 20
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1158116083
 Rigidbody:
@@ -3284,7 +3320,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1177335392
 Rigidbody:
@@ -3454,13 +3490,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5c67a51fc055ef45a2fe192736d1712, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  running: 0
+  initialMoveTarget: {fileID: 0}
+  initialFacingTarget: {fileID: 0}
   movementSettings:
-    moveSpeed: 4
-    stoppingDistance: 0.2
-    moveSpeedModifier: 1
-    avoidStaticObstacles: 1
+    walkSpeed: 4
+    runSpeed: 6
     moveAcceleration: 4
-    brakeFactor: 6
     turnForce: 2
     preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
@@ -3470,9 +3506,15 @@ MonoBehaviour:
     strength: 80
     damping: 500
     inheritGroundsVelocity: 1
-  legLength: 0
-  bodyRadius: 0
-  bodyHeight: 0
+  jumpSettings:
+    enableJump: 1
+    useJumpBoost: 1
+  bodyDimensions:
+    autoConfigure: 1
+    torsoBodyRatio: 0.7
+    legLength: 0
+    bodyRadius: 0
+    bodyHeight: 0
 --- !u!1 &1186664532
 GameObject:
   m_ObjectHideFlags: 0
@@ -3596,7 +3638,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1257651636
 Rigidbody:
@@ -3705,7 +3747,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 16
+  m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1263833192
 Rigidbody:
@@ -3808,7 +3850,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1295912511}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
+  m_LocalPosition: {x: 0.89, y: -1, z: 0.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 252882825}
@@ -3824,7 +3866,7 @@ TextMesh:
   m_GameObject: {fileID: 1295912511}
   m_Text: Moving and Spinning
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -3935,7 +3977,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1364478153
 Rigidbody:
@@ -4044,7 +4086,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1412829018
 Rigidbody:
@@ -4152,7 +4194,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.3388605, y: -0.5658381, z: 5.0755553}
   m_LocalScale: {x: 1.6638, y: 0.4657659, z: 1.875}
-  m_Children: []
+  m_Children:
+  - {fileID: 1619676234}
   m_Father: {fileID: 1604488039}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4275,7 +4318,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1452716950
 Rigidbody:
@@ -4503,7 +4546,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 22
+  m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1601373192
 Rigidbody:
@@ -4613,7 +4656,6 @@ Transform:
   - {fileID: 210443671}
   - {fileID: 481980691}
   - {fileID: 622555398}
-  - {fileID: 1619676234}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4642,12 +4684,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1619676233}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.741, y: 0.48, z: -0.924}
+  m_LocalScale: {x: 0.5333336, y: 2.1470015, z: 0.60103405}
   m_Children: []
-  m_Father: {fileID: 1604488039}
-  m_RootOrder: 6
+  m_Father: {fileID: 1428276425}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!102 &1619676235
 TextMesh:
@@ -4659,7 +4701,7 @@ TextMesh:
   m_GameObject: {fileID: 1619676233}
   m_Text: Trivial In Platform's path
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -4826,7 +4868,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.3388605, y: -0.5658381, z: 5.0755553}
   m_LocalScale: {x: 1.6638, y: 0.4657659, z: 1.875}
-  m_Children: []
+  m_Children:
+  - {fileID: 540214495}
   m_Father: {fileID: 404215428}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4908,7 +4951,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &1721252051
 Rigidbody:
@@ -5252,7 +5295,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!1 &1849824093
 GameObject:
@@ -5388,7 +5431,7 @@ GameObject:
   - component: {fileID: 1917278447}
   - component: {fileID: 1917278446}
   m_Layer: 0
-  m_Name: New Text
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5401,12 +5444,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917278444}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -1.08, z: -2.46}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0.741, y: 0.48, z: -0.924}
+  m_LocalScale: {x: 0.5333336, y: 2.1470015, z: 0.60103405}
   m_Children: []
-  m_Father: {fileID: 292058700}
-  m_RootOrder: 6
+  m_Father: {fileID: 655963363}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!102 &1917278446
 TextMesh:
@@ -5418,7 +5461,7 @@ TextMesh:
   m_GameObject: {fileID: 1917278444}
   m_Text: Kinematic Rigidbody
   m_OffsetZ: 0
-  m_CharacterSize: 1
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
@@ -5601,21 +5644,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfbecde417c695c40bf6f48f7551c480, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraOffsetY: 1.11
-  cameraOffsetX: 0
-  cameraMinAngleY: -50
-  cameraMaxAngleY: 50
-  cameraMinZ: 5
-  cameraMaxZ: 60
-  cameraDistance: 2.84
-  camSmoothX: 4
-  camSmoothY: -1.2
-  camSmoothZ: -10
+  cameraX: -45.87
+  cameraY: 30.3
   useQuickCursorToggle: 1
   startWithMouseCaptured: 0
   showGUIMessage: 1
-  cameraX: -45.87
-  cameraY: 30.3
 --- !u!1 &2039622403
 GameObject:
   m_ObjectHideFlags: 0
@@ -5769,7 +5802,7 @@ Transform:
   m_LocalScale: {x: 0.3702721, y: 0.94882244, z: 0.37027198}
   m_Children: []
   m_Father: {fileID: 485302732}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!54 &2058457777
 Rigidbody:

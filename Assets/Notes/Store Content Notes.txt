@@ -1,0 +1,80 @@
+
+Meat Puppet - Humanoid Character Controller
+
+- A locomotion and animation system for humanoid characters, especially NPC's
+- Handles movement and pathing for a character
+- Uses dynamic physics and collisions
+- Can be used as a Third-person or FPS player controller
+- Allows other scripts/systems to play arbitrary humanoid animations on the character
+	- Can be blended over locomotion
+	- Can be either one-shot or looping animations
+	- Can temporarily affect corporeal/intangible and dynamic/kinematic
+	- Can apply root motion from animation or not
+- Unique spring and capsule structure allows the character to 'glide' over irregular terrain
+- Handles most humanoid character needs so that messing with the Animation Controller isn't necessary
+
+- corporeal/intangible
+
+- dynamic/kinematic
+
+	- dynamic + corporeal -> character will move using forces and collide with obstacles and other characters. Collisions will affect both's forces.
+	- dynamic + intangible -> character will move using forces and will NOT collide with obstacles and other characters.
+	- kinematic + corporeal -> character will move kinematicelly and collide with obstacles and other characters. Collisions will NOT affect this character, but WILL affect other dynamic obstacles and characters
+	- kinematic + intangible -> character will move kinematically and will NOT collide with or affect obstacles and other characters.
+
+- One-shot / looping animations
+	- Argueably, %99 of what humanoid NPCs in a game will do can be covered by playing some animation on them. An attack is just a swing animation. Talking is just a looping animation of them in a discussion.
+	- This system allows for two kinds of animations to be played on a character: 'One-shot' and 'looping'. Looping animations are any animation that starts over when it is finished and continuously plays forever. One-shot animations are the opposite; they play through once and then stop when they are finished.
+	- One-shot animations can be used fire and forget
+	- Looping animations must be 'stopped' at some point after they are started.
+	- Looping animations can optionally (but are encouraged to) have an entry animation and an exit animation that more smoothly blends the looping animation with the locomotion animation.
+	- If an animation (one-shot or looping) is started while a looping animation is in the middle of looping -> undefined
+	- If a one-shot animation is fired while a one-shot animation is playing -> the new one-shot animation will interrupt and play over the old one
+	- If a one-shot animation is fired while a looping animation is ending -> the one-shot animation will play as soon as the looping animation has finished
+	- If a looping animation is fired while a looping animation is ending -> the new looping animation will play as soon as the old looping animation has finished
+	- If a looping animation is fired while a one-shot animation is playing -> the new looping animation will play as soon as the one-shot animation has finished
+
+* Recommended to use with:
+	- FinalIK
+	- UMA
+	- Dynamic Bone
+	- Obi Cloth
+
+* NOT necessarily a universal controller. It is an NPC controller for this kind of NPC movement and interaction
+
+* Demo scene:
+	[-] Just animation controller (human stands in place, animation parameters are on on-screen sliders)
+	[-] Walking up ramp(s)
+	[-] Walking down ramp(s)
+	- Walking over uneven terrain
+	- Pushing dynamic obstacles
+	- Being pushed by dynamic obstacles
+	[-] Walking straight
+		- Starting and stopping
+	- Running straight
+		- Starting and stopping
+	- Walking in circles
+		- Starting and stopping
+	- Running in circles
+		- Starting and stopping
+	[-] Turning in place
+	- Sit down and stand up from chair
+	- Play one shot animation
+		- Blended over locomotion
+		- Overriding locomotion
+	- Play one shot animation, interrupting a another
+	- Play a looping animation
+		- Blended over locomotion
+		- Overriding locomotion
+	[-] Using moving platforms
+	- Climbing up:
+		- Knee-high obstacle
+		- Waist-high obstacle
+		- Head-high obstacle
+	- Climbing down
+	- Different humanoids (models and sizes)
+
+* Simple as:
+	1. Add MeatPuppetManager prefab to the scene
+	2. Add MeatPuppet component to the root of the character
+	3. (Optional) Add a MeatPuppet Player Controller component to the player

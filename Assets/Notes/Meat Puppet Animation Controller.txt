@@ -1,0 +1,67 @@
+
+
+Meat Puppet Animation System
+
+- Handles locomotion on the humanoid
+	- Blends a standing - walking - running animation based on the velocity
+	- Detects edges and automatically causes the humanoid to climb or hop over
+		- Set height difference ranges cause one type or another:
+			- Knee-high obstacle
+			- Waist-high obstacle
+			- Head-high obstacle
+	- Slope of terrain effects lateral velocity
+	- Uses dynamic physics - velocity and acceleration
+
+- Allows other systems to fire one-shot and looping animations
+	- PlayOneShotAnimation(animation)
+	- StartLoopingAnimation(animation)
+	- StopLoopingAnimation()
+	- Optionally allows for configuration on...
+		- Apply Root Motion
+		- Make corporeal/intangible
+		- Make dynamic/kinematic
+		- Blend with locomotion
+
+- Handles 'interactions' between the unit and interactable objects?
+	- PlayOneShotInteraction(interactableObject)
+	- StartLoopingInteraction(interactableObject)
+	- StopLoopingInteraction()
+
+- Handles 'interactions' between one meat puppet and another?
+
+- Handles jumping and falling
+
+- Handles the unit's dynamic <-> kinematic
+
+- Handles the unit's corporeal <-> intangible
+
+- Allows other systems to play a facial expression on the unit?
+
+- Controls the humanoid's clothing (through UMA) and wraps manipulating with them?
+
+- Controls the humanoid's state?
+	- Whether they are...
+		- Standing (default, typical locomotion)
+		- Ragdoll
+		- Crouching
+		- Prone
+		- Sitting down
+		- Kneeling
+		- Laying down on back
+		- Laying down on front
+		- Laying down on side
+
+- Allows other systems to cause or uncause Ragdoll?
+	- Active ragdoll?
+	- Handles the transition from arbitrary ragdoll position to standing / standard locomotion
+
+- Couples with the movement system
+	- Allows other systems to give the unit world locations as navigation destinations
+	- Allows other systems to give the unit a target direction or velocity
+	- Uses Unity NavMeshAgent to pathfind
+	- Uses Unity dynamic physics
+	- Uses velocity and acceleration
+
+- Uses a 'shock absorber' to give the humanoid a more natural vertical motion
+
+- Comes with a Player controller so that all of this can be controlled by the player's input on a target character

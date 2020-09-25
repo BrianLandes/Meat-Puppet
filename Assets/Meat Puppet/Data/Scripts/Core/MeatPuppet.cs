@@ -1,0 +1,233 @@
+﻿
+using System;
+using UnityEngine;
+namespace PBG.MeatPuppet {
+	[DefaultExecutionOrder(-999)]
+	public class MeatPuppet : MonoBehaviour {
+
+		#region Settings
+
+		public bool running = false;
+		
+		public MovementSettings movementSettings;
+
+		public LegsSettings legsSettings;
+
+		public JumpSettings jumpSettings;
+
+		public BodyDimensions bodyDimensions;
+
+		#endregion
+
+		#region Properties
+		
+		public bool Initialized { get; private set; }
+
+		public Tangibility Tangibility {
+			get {
+				if (Collider.enabled && !Collider.isTrigger) {
+					return Tangibility.Corporeal;
+				}
+
+				return Tangibility.Intangible;
+			}
+			set {
+				if (value == Tangibility.Corporeal) {
+					Collider.enabled = true;
+					Collider.isTrigger = false;
+				}
+				else {
+					Collider.enabled = false;
+				}
+			}
+		}
+
+		public PhysicalMotionType MotionType {
+			get {
+				if (Rigidbody.isKinematic) {
+					return PhysicalMotionType.Kinematic;
+				}
+				// TODO: static?
+				return PhysicalMotionType.Dynamic;
+			}
+			set {
+				if (value == PhysicalMotionType.Kinematic) {
+					Rigidbody.isKinematic = true;
+				}
+				else {
+					Rigidbody.isKinematic = false;
+				}
+			}
+		}
+		
+		#endregion
+		
+		#region Public Parts
+
+		public MeatPuppetAnimatorHook AnimatorHook { get; private set; }
+
+		/// <summary>
+		/// Capsule collider that approximates the puppet's torso and head.
+		/// </summary>
+		public Collider Collider { get; private set; }
+
+		public Rigidbody Rigidbody { get; private set; }
+
+		public MeatPuppetMovement Movement { get; private set; }
+
+		public MeatPuppetLocomotion Locomotion { get; private set; }
+
+		public MeatPuppetJump Jump { get; private set; }
+
+		public MeatPuppetLegs Legs { get; private set; }
+		
+		public MeatPuppetAnimation Animation { get; private set; }
+		
+
+		#endregion
+
+		#region MonoBehaviour Lifecycle
+
+		public void Start() {
+			GrowParts();
+		}
+
+		public void OnEnable() {
+			Locomotion?.Reset();
+		}
+
+		private void LateUpdate() {
+			Locomotion.Update();
+		}
+
+		private void FixedUpdate() {
+			Legs.Update();
+			Jump.Update();
+		}
+
+#if UNITY_EDITOR
+
+		private void OnValidate() {
+			if (Movement != null) {
+				Movement.InitializeNavAgent();
+			}
+		}
+#endif
+		#endregion
+
+		#region Public Methods
+
+
+		#endregion
+
+
+		#region Body Positions
+
+
+		public Vector3 GetPelvisPoint() {
+			// TODO: assumes that the puppet is standing
+			return transform.position + Vector3.up * bodyDimensions.legLength;
+		}
+
+		public Vector3 GetHeadPoint() {
+			// TODO: assumes that the puppet is standing
+			return transform.position + Vector3.up * bodyDimensions.bodyHeight;
+		}
+
+		#endregion
+
+		#region Private Methods
+
+		private void GrowParts() {
+			Locomotion = new MeatPuppetLocomotion(this);
+
+			Legs = new MeatPuppetLegs(this);
+
+			var animator = gameObject.GetComponentInChildren<Animator>();
+			AnimatorHook = animator.gameObject.AddComponent<MeatPuppetAnimatorHook>();
+
+			Collider = GetComponent<Collider>();
+			if (Collider == null) {
+				// create and assign a capsule collider
+
+				var capsuleCollider = gameObject.AddComponent<CapsuleCollider>();
+				Collider = capsuleCollider;
+			}
+			if (bodyDimensions.autoConfigure) {
+				AutoConfigureBodyDimensions();
+			}
+
+			ConfigureRigidBody();
+
+			Movement = gameObject.AddComponent<MeatPuppetMovement>();
+
+			Jump = new MeatPuppetJump(this);
+			
+			Animation = new MeatPuppetAnimation(this);
+
+			Initialized = true;
+		}
+
+		private void AutoConfigureBodyDimensions() {
+			// give it automatic dimensions based on the model
+			var capsuleCollider = Collider as CapsuleCollider;
+			var meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+			bodyDimensions.bodyRadius = capsuleCollider.radius = meshRenderer.localBounds.extents.z;
+			bodyDimensions.bodyHeight = meshRenderer.localBounds.size.y;
+			capsuleCollider.height = meshRenderer.localBounds.size.y * bodyDimensions.torsoBodyRatio;
+			capsuleCollider.center = Vector3.up * (meshRenderer.localBounds.size.y - capsuleCollider.height * 0.5f);
+
+			capsuleCollider.material = MeatPuppetManager.Instance.characterPhysicMaterial;
+
+			bodyDimensions.legLength = meshRenderer.localBounds.size.y - capsuleCollider.height;
+		}
+
+		private void ConfigureRigidBody() {
+			Rigidbody = GetComponent<Rigidbody>();
+			if (Rigidbody == null) {
+				Rigidbody = gameObject.AddComponent<Rigidbody>();
+			}
+			// assign some properties:
+			Rigidbody.isKinematic = false;
+			Rigidbody.angularDrag = 20;
+			Rigidbody.mass = 3;
+			Rigidbody.drag = 1;
+			Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+		}
+
+		private void ApplyJumpForce() {
+			Jump.ApplyJumpForce();
+		}
+
+		#endregion
+
+	}
+
+	#region Classes and Enums
+	
+	[Serializable]
+	public class BodyDimensions {
+		public bool autoConfigure = true;
+
+		public float torsoBodyRatio = 0.7f;
+
+		public float legLength;
+
+		public float bodyRadius;
+		public float bodyHeight;
+
+	}
+
+	public enum Tangibility {
+		Corporeal,
+		Intangible
+	}
+
+	public enum PhysicalMotionType {
+		Kinematic,
+		Dynamic,
+		Static
+	}
+	
+	#endregion
+}

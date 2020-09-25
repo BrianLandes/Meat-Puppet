@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\Brian\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Brian\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_Meat Puppet.97007558.00" t="ExcludeRecursive" />
+    <e p="C:\Users\Brian\Documents\Unity Projects\Meat Puppet" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Meat Puppet" t="Include">
+          <e p="Data" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="Core" t="Include">
+                <e p="MeatPuppet.cs" t="Include" />
+                <e p="MeatPuppetManager.cs" t="Include" />
+              </e>
+              <e p="Meat Puppet Parts" t="Include">
+                <e p="MeatPuppetAnimation.cs" t="Include" />
+                <e p="MeatPuppetAnimatorHook.cs" t="Include" />
+                <e p="MeatPuppetJump.cs" t="Include" />
+                <e p="MeatPuppetLegs.cs" t="Include" />
+                <e p="MeatPuppetLocomotion.cs" t="Include" />
+                <e p="MeatPuppetMovement.cs" t="Include" />
+              </e>
+              <e p="Player and Camera" t="Include">
+                <e p="MeatPuppetPlayerController.cs" t="Include" />
+                <e p="OrbitalCameraController.cs" t="Include" />
+              </e>
+              <e p="Utilities" t="Include">
+                <e p="ColliderVelocity.cs" t="Include" />
+                <e p="MeatPuppetLoopingAnimationConfiguration.cs" t="Include" />
+                <e p="MeatPuppetOneShotAnimationConfiguration.cs" t="Include" />
+                <e p="MeatPuppetToolKit.cs" t="Include" />
+                <e p="Vector3Extensions.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+          <e p="Demos (safe to delete)" t="Include">
+            <e p="Demo Resources" t="Include">
+              <e p="Scripts" t="Include">
+                <e p="CycleOrbitalTargets.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Scenes" t="Include">
+              <e p="AC Parameter Studio" t="Include">
+                <e p="ParameterStudioDriver.cs" t="Include" />
+              </e>
+              <e p="Basic Meat Puppet" t="Include">
+                <e p="BasicDriver.cs" t="Include" />
+              </e>
+              <e p="Looping Animations" t="Include">
+                <e p="LoopingAnimationDriver.cs" t="Include" />
+              </e>
+              <e p="Moving Platforms" t="Include">
+                <e p="MovingPlatform.cs" t="Include" />
+                <e p="MovingPlatformDynamicBody.cs" t="Include" />
+                <e p="MovingPlatformKinematicBody.cs" t="Include" />
+                <e p="SpinningPlatform.cs" t="Include" />
+              </e>
+              <e p="Navigation Test" t="Include">
+                <e p="NavigationTestDriver.cs" t="Include" />
+              </e>
+              <e p="Player Controller" t="Include">
+                <e p="VaultOverBox.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Notes" t="Include">
+          <e p="Meat Puppet Animation Controller.txt" t="Include" />
+          <e p="Store Content Notes.txt" t="Include" />
+        </e>
+      </e>
+      <e p="Meat Puppet.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

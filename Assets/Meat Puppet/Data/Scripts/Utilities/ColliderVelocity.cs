@@ -30,7 +30,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		public Vector3 GetAngularVelocity() {
-			return lastAngularSpeed;
+			return lastAngularSpeed * Time.deltaTime;
 		}
 
 		//public float GetTurnSpeed() {

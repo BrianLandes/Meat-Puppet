@@ -142,15 +142,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveTarget: {fileID: 1784748006}
-  facingTarget: {fileID: 0}
   meatPuppet: {fileID: 1028446856}
   targets:
   - {fileID: 488259531}
   - {fileID: 200859275}
   - {fileID: 284437482}
   - {fileID: 725268119}
-  facingTargets: []
-  waitTime: 4
+  waitTime: 3
 --- !u!4 &8970527
 Transform:
   m_ObjectHideFlags: 0

@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="089da6df-8e53-4e10-acaf-3efa03df5ab3" name="Default Changelist" comment="" />
+    <list default="true" id="089da6df-8e53-4e10-acaf-3efa03df5ab3" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Meat Puppet/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetLegs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetLegs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Notes/Store Content Notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Notes/Store Content Notes.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Scenes/Looping Animations/LoopingAnimationDriver.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Demo Resources/Scripts/CycleMoveTargets.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetAnimation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Utilities/MeatPuppetOneShotAnimationConfiguration.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Scenes/Player Controller/VaultOverBox.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Demo Resources/Scripts/CycleFacingTargets.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -24,16 +34,19 @@
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Utilities/MeatPuppetLoopingAnimationConfiguration.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetAnimation.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Scenes/Player Controller/VaultOverBox.cs" />
-        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetLegs.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Scenes/AC Parameter Studio/ParameterStudioDriver.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Core/MeatPuppetManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Core/MeatPuppet.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetMovement.cs" />
         <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetLocomotion.cs" />
+        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Core/MeatPuppet.cs" />
+        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Demo Resources/Scripts/CycleFacingTargets.cs" />
+        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Demos (safe to delete)/Demo Resources/Scripts/CycleMoveTargets.cs" />
+        <option value="$PROJECT_DIR$/Assets/Meat Puppet/Data/Scripts/Meat Puppet Parts/MeatPuppetLegs.cs" />
       </list>
     </option>
   </component>
   <component name="ProjectId" id="1hsaf0id1mnWGmi0wEBLKZKZnFf" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -83,7 +96,8 @@
       <updated>1600802357604</updated>
       <workItem from="1600802360848" duration="13388000" />
       <workItem from="1600821871281" duration="2310000" />
-      <workItem from="1600968565069" duration="5781000" />
+      <workItem from="1600968565069" duration="7830000" />
+      <workItem from="1601400682982" duration="326000" />
     </task>
     <servers />
   </component>

@@ -212,30 +212,31 @@ namespace PBG.MeatPuppet {
 
 			parentPuppet.Rigidbody.position += groundVelocity * Time.deltaTime;
 
-			var spin = Quaternion.AngleAxis(groundAngularVelocity.y * Time.deltaTime, Vector3.up);
+			var spin = Quaternion.AngleAxis(groundAngularVelocity.y, Vector3.up);
 			//var spin = Quaternion.Euler(colliderVelocity.GetAngularVelocity() * Time.deltaTime);
 			parentPuppet.Rigidbody.rotation *= spin;
 
 			// if the ground is rotating -> move the position of the puppet in a circle around the ground's center of mass
 			var lastPosition = parentPuppet.Rigidbody.position - groundCenterOfMass;
 
+			spin = Quaternion.Euler(groundAngularVelocity);
 			var changeInPosition = spin * lastPosition - lastPosition;
 			parentPuppet.Rigidbody.position += changeInPosition;
 
 			parentPuppet.Locomotion.SetIgnoreVelocity(groundVelocity + changeInPosition / Time.deltaTime);
 
-			parentPuppet.Locomotion.SetIgnoreTurnSpeed(groundAngularVelocity);
+			parentPuppet.Locomotion.SetIgnoreTurnSpeed(groundAngularVelocity / Time.deltaTime);
 		}
 
 		private void UpdateGrounded( bool touchingGround ) {
 			if (IsGrounded && !touchingGround) {
-				ungroundedDelay -= Time.deltaTime;
-				if (ungroundedDelay <=0) {
+				ungroundedDelayTimer -= Time.deltaTime;
+				if (ungroundedDelayTimer <=0) {
 					IsGrounded = false;
 				}
 			}
 			else if (IsGrounded && touchingGround) {
-				ungroundedDelay = ungroundedDelay;
+				ungroundedDelayTimer = ungroundedDelay;
 			}
 			else {
 				IsGrounded = touchingGround;

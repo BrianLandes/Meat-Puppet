@@ -12,6 +12,17 @@ Meat Puppet - Humanoid Character Controller
 	- Can apply root motion from animation or not
 - Unique spring and capsule structure allows the character to 'glide' over irregular terrain
 - Handles most humanoid character needs so that messing with the Animation Controller isn't necessary
+- Supports...
+	- Jumping
+	- Moving Platforms
+	- Moving to one place while facing another
+	- Walking and Running
+- Setup involves:
+	1. Add MeatPuppetManager prefab to the scene
+	2. Add MeatPuppet component to the root of the character (alongside the Animator component, parent of the SkinnedMeshRenderer)
+	3. Bake Unity Navigation Mesh
+	4. Give the MeatPuppet a target destination and/or something to look at
+	* (Optional) Add a MeatPuppet Player Controller component to the player
 
 - corporeal/intangible
 
@@ -46,9 +57,9 @@ Meat Puppet - Humanoid Character Controller
 	[-] Just animation controller (human stands in place, animation parameters are on on-screen sliders)
 	[-] Walking up ramp(s)
 	[-] Walking down ramp(s)
-	- Walking over uneven terrain
+	[-] Walking over uneven terrain
 	- Pushing dynamic obstacles
-	- Being pushed by dynamic obstacles
+	[-] Being pushed by dynamic obstacles
 	[-] Walking straight
 		- Starting and stopping
 	- Running straight
@@ -58,12 +69,12 @@ Meat Puppet - Humanoid Character Controller
 	- Running in circles
 		- Starting and stopping
 	[-] Turning in place
-	- Sit down and stand up from chair
-	- Play one shot animation
+	[-] Sit down and stand up from chair
+	[-] Play one shot animation
 		- Blended over locomotion
 		- Overriding locomotion
-	- Play one shot animation, interrupting a another
-	- Play a looping animation
+	[-] Play one shot animation, interrupting a another
+	[-] Play a looping animation
 		- Blended over locomotion
 		- Overriding locomotion
 	[-] Using moving platforms
@@ -73,8 +84,3 @@ Meat Puppet - Humanoid Character Controller
 		- Head-high obstacle
 	- Climbing down
 	- Different humanoids (models and sizes)
-
-* Simple as:
-	1. Add MeatPuppetManager prefab to the scene
-	2. Add MeatPuppet component to the root of the character
-	3. (Optional) Add a MeatPuppet Player Controller component to the player

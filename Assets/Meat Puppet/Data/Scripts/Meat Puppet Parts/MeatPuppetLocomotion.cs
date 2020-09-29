@@ -13,7 +13,7 @@ namespace PBG.MeatPuppet {
 		
 		private float turnSpeedFactor = 0.01f;
 
-		private float minDeltaTime = 0.01f;
+		private float minDeltaTime = 0.1f;
 
 		// private float velocitySmoothing = 30.0f;
 		

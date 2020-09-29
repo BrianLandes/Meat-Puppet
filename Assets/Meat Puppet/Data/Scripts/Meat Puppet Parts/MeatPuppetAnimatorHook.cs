@@ -17,9 +17,9 @@ namespace PBG.MeatPuppet {
 		/// Events to fire if the animator's state changes.
 		/// The int passed through is the new state's hash.
 		/// </summary>
-		public Action<int> onStateChange;
+		public Action<AnimatorStateInfo, int> onStateChange;
 
-		private int lastState;
+		//private int lastState;
 
 		private Animator animator;
 
@@ -59,20 +59,20 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
-		private void Update() {
+		//private void Update() {
 
-			if (!HasAnimator) {
-				return;
-			}
+			//if (!HasAnimator) {
+			//	return;
+			//}
 
-			int currentState = Animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+			//int currentState = Animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
 
-			if (currentState != lastState) {
-				onStateChange?.Invoke(currentState);
-				lastState = currentState;
-			}
+			//if (currentState != lastState) {
+			//	onStateChange?.Invoke(currentState);
+			//	lastState = currentState;
+			//}
 
-		}
+		//}
 
 		/// <summary>
 		/// Called by Unity.Animator through message.
@@ -147,6 +147,10 @@ namespace PBG.MeatPuppet {
 				return Animator.GetBool(name);
 			}
 			return false;
+		}
+
+		public void InformOfEmptyState(AnimatorStateInfo stateInfo, int layerIndex) {
+			onStateChange?.Invoke(stateInfo, layerIndex);
 		}
 	}
 }

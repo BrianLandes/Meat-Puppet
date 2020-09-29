@@ -9,6 +9,7 @@ namespace PBG.MeatPuppet {
 
 		public string horizontalAxisName = "Horizontal";
 		public string verticalAxisName = "Vertical";
+		public string sprintInputName = "Fire3";
 
 		private MeatPuppet puppet;
 
@@ -38,6 +39,8 @@ namespace PBG.MeatPuppet {
 					puppet.Jump.EndBoost();
 				}
 			}
+
+			puppet.running = Input.GetButton(sprintInputName);
 		}
 
 		private Vector3 GetPlayerInput() {

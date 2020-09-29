@@ -10,6 +10,7 @@ namespace PBG.MeatPuppet {
 		public bool applyRootMotion = false;
 		public bool makeIntangible = false;
 		public bool makeKinematic = false;
+		public bool overrideLegs = true;
 	}
 }
 

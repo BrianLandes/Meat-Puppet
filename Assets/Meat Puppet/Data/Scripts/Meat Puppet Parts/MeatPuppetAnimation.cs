@@ -31,38 +31,52 @@ namespace PBG.MeatPuppet {
 		private const string LoopStopTrigger = "Stop Loop";
 		private const string LoopEnterBool = "Loop Enter";
 		private const string LoopExitBool = "Loop Exit";
-		
-		#region Animation Controller State Values
-		
-		private const string LocomotionStateName = "Locomotion Blend Tree";
-		private readonly int locomotionStateHash;
-		
-		private readonly int loopingAnimationStateHash;
-		
+
+		private const int loopLayerIndex = 2;
+		private const int loopMaskedLayerIndex = 3;
+		private const int oneShotLayerIndex = 4;
+		private const int oneShotMaskedLayerIndex = 5;
+
+		//#region Animation Controller State Values
+
+		//private const string LocomotionStateName = "Locomotion Blend Tree";
+		//private readonly int locomotionStateHash;
+
+		//private readonly int loopingAnimationStateHash;
+
+		//#endregion
 		#endregion
-		#endregion
-		
-		
+
+
 		public MeatPuppetAnimation(MeatPuppet parent) {
 			parentPuppet = parent;
 			
 			parentPuppet.AnimatorHook.onStateChange += OnStateChange;
 			parentPuppet.AnimatorHook.onAnimatorMove += OnAnimatorMove;
 
-			locomotionStateHash = Animator.StringToHash(LocomotionStateName);
-			loopingAnimationStateHash = Animator.StringToHash(LoopAnimationKey);
+			//locomotionStateHash = Animator.StringToHash(LocomotionStateName);
+			//loopingAnimationStateHash = Animator.StringToHash(LoopAnimationKey);
 		}
 
 		#region Public Methods
 		
 		#region Looping Animation
 		
-		public void StartLoopingAnimation(AnimationClip animation, AnimationClip enterAnimation = null, AnimationClip exitAnimation = null) {
-			// TODO: add configuration settings as optional parameters
+		public void StartLoopingAnimation(AnimationClip animation, AnimationClip enterAnimation = null, AnimationClip exitAnimation = null,
+				bool applyRootMotion = false,
+				bool makeIntangible = false,
+				bool makeKinematic = false,
+				bool overrideLegs = true
+			) {
+
 			currentLoopingAnimation = new MeatPuppetLoopingAnimationConfiguration() {
 				loopingClip = animation,
 				entryClip = enterAnimation,
 				exitClip =  exitAnimation,
+				applyRootMotion = applyRootMotion,
+				makeIntangible = makeIntangible,
+				makeKinematic = makeKinematic,
+				overrideLegs = overrideLegs
 			};
 			StartLoopingAnimation(currentLoopingAnimation);
 		}
@@ -76,6 +90,7 @@ namespace PBG.MeatPuppet {
 			parentPuppet.AnimatorHook.AnimatorController[LoopEnterAnimationKey] = animation.entryClip;
 			parentPuppet.AnimatorHook.AnimatorController[LoopExitAnimationKey] = animation.exitClip;
 
+			parentPuppet.AnimatorHook.Animator.SetBool("Loop Masked", !animation.overrideLegs);
 			parentPuppet.AnimatorHook.Animator.SetTrigger(LoopStartTrigger);
 			parentPuppet.AnimatorHook.Animator.ResetTrigger(LoopStopTrigger);
 			parentPuppet.AnimatorHook.Animator.SetBool(LoopEnterBool, animation.entryClip!=null);
@@ -110,6 +125,7 @@ namespace PBG.MeatPuppet {
 				parentPuppet.AnimatorHook.AnimatorController["One Shot Animation Alternative"] = animation;
 				usingOneShotAlternative = true;
 			}
+			parentPuppet.AnimatorHook.Animator.SetBool("One Shot Masked", configuration!=null && !configuration.overrideLegs);
 			parentPuppet.AnimatorHook.Animator.SetTrigger("Start One Shot");
 			
 			playingOneShotAnimation = true;
@@ -122,37 +138,44 @@ namespace PBG.MeatPuppet {
 
 			PlayingAnimation = true;
 		}
-		
+
 		#endregion // End of One-Shot Animation
-		
+
 		#endregion // End of Public Methods
 
 		#region Private Methods
 
-		private void OnStateChange(int stateNameHash) {
-			if ( locomotionStateHash == stateNameHash) {
-				// animator is ENTERING locomotion
+		private void OnStateChange(AnimatorStateInfo stateInfo, int layerIndex) {
+			//if ( locomotionStateHash == stateNameHash) {
+			if (layerIndex == loopLayerIndex || layerIndex == loopMaskedLayerIndex) { 
+				// animator is ENTERING empty on looping layer
 
 				if (waitingForReturnToLocomotion && !playingOneShotAnimation) {
 					// typical case: looping animation has ended and we should end/finalize it
-					
+
 					// edge case: a looping animation is about to start and a one-shot animation has ended
 
 					FinalizeLoopEnd();
 				}
-
+				
+			}
+			else
+			if (layerIndex == oneShotLayerIndex || layerIndex == oneShotMaskedLayerIndex) {
+				// animator is ENTERING empty on one shot layer
+				
 				if (playingOneShotAnimation) {
 					FinalizeOneShotEnd();
 				}
 			}
-			else
-			if (loopingAnimationStateHash == stateNameHash) {
-				// animator is ENTERING the looping animation state
-
-				if (PlayingAnimation) {
-					// InformOfLoopingStart();
-				}
-			}
+			//}
+			//else
+			//if (loopingAnimationStateHash == stateNameHash) {
+			//	// animator is ENTERING the looping animation state
+			//
+			//	if (PlayingAnimation) {
+			//		// InformOfLoopingStart();
+			//	}
+			//}
 		}
 
 		private void OnAnimatorMove() {

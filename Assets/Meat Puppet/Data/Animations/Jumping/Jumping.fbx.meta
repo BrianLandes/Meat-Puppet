@@ -199,7 +199,7 @@ ModelImporter:
     - serializedVersion: 16
       name: Start Jump
       takeName: mixamo.com
-      firstFrame: 0
+      firstFrame: 6
       lastFrame: 17
       wrapMode: 0
       orientationOffsetY: 0
@@ -212,7 +212,7 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0
@@ -240,7 +240,7 @@ ModelImporter:
       loopBlendOrientation: 1
       loopBlendPositionY: 0
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
+      keepOriginalOrientation: 1
       keepOriginalPositionY: 1
       keepOriginalPositionXZ: 0
       heightFromFeet: 0

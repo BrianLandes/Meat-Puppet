@@ -4,6 +4,18 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace PBG.MeatPuppet {
 
+
+	[Serializable]
+	public class LegsSettings {
+		[NonSerialized] public float strength = 130f;
+
+		[NonSerialized] public float damping = 600f;
+
+		[NonSerialized] public float offset = -0.2f;
+
+		public bool inheritGroundsVelocity = true;
+	}
+
 	public class MeatPuppetLegs {
 
 		// TODO: slope affects movement speed
@@ -30,13 +42,10 @@ namespace PBG.MeatPuppet {
 		private float minJumpTime = 0.8f;
 		private float minJumpTimer = 0.0f;
 
-		private float ungroundedDelay = 0.05f;
+		private float ungroundedDelay = 0.3f;
 		private float ungroundedDelayTimer = 0.0f;
-		
-		// private bool forceUngrounded = false;
-		// private bool forceUngroundedStoppedTouchingGround = false;
-		// private float forceUngroundedFailSafeTime = 0.8f;
-		// private float forceUngroundedFailSafeTimer = 0f;
+
+		//private float lastOffset = 0.0f;
 
 		public MeatPuppetLegs(MeatPuppet parent) {
 			parentPuppet = parent;
@@ -70,12 +79,18 @@ namespace PBG.MeatPuppet {
 		/// If no ground is detected, the puppet is considered 'ungrounded'.
 		/// </summary>
 		private void UpdateNormal() {
-			float offset = -parentPuppet.bodyDimensions.legLength * 0.66f;
+			//float offset = -parentPuppet.bodyDimensions.legLength * 0.66f;
+
 			// TODO: figure out the offset automatically by measuring the difference when at rest
-			var distance = parentPuppet.bodyDimensions.legLength - offset;
-			
+
+			var distance = parentPuppet.bodyDimensions.legLength * 1.66f;
+			//var distance = parentPuppet.bodyDimensions.legLength - offset;
+
 			if (CastForGround(distance, out var raycastHit)) {
-				float targetPosition = offset + parentPuppet.transform.position.y;
+
+				// lastOffset = CalculateOffset(lastOffset, raycastHit.point.y, parentPuppet.transform.position.y);
+
+				float targetPosition = parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
 				float displacement = raycastHit.point.y- targetPosition;
 				var direction = GetDirection();
 				
@@ -255,16 +270,19 @@ namespace PBG.MeatPuppet {
 			minJumpTimer = minJumpTime;
 		}
 		
+		private float CalculateOffset(float currentOffset, float groundY, float puppetY) {
+			if (Mathf.Approximately(groundY, puppetY)) {
+				if (Mathf.Approximately(0, parentPuppet.Rigidbody.velocity.y)) {
+					return currentOffset * 0.98f;
+				}
+			}
+			else if (groundY > puppetY) {
+				float difference = puppetY - groundY;
+				return currentOffset + (difference*3f - currentOffset) * 0.1f;
+			}
+
+			return currentOffset * 0.98f;
+		}
 	}
 
-	[Serializable]
-	public class LegsSettings {
-		public float strength = 80f;
-
-		public float damping = 500f;
-
-		//public float offset = -0.32f;
-
-		public bool inheritGroundsVelocity = true;
-	}
 }

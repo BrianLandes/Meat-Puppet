@@ -7,7 +7,7 @@ namespace PBG.MeatPuppet {
 		private float forwardSpeedSmoothing = 16f;
 		private float lastForwardSpeed;
 		
-		private float horizontalSpeedFactor = 1.9f;
+		//private float horizontalSpeedFactor = 1.9f;
 		private float horizontalSpeedSmoothing = 16f;
 		private float lastHorizontalSpeed;
 		
@@ -131,7 +131,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		private float CalculateGroundSteep() {
-			var distance = parentPuppet.bodyDimensions.legLength * 1.5f;
+			var distance = parentPuppet.bodyDimensions.legLength + parentPuppet.bodyDimensions.bodyHeight;
 			if (CastForGround(distance, out var raycastHit)) {
 				float verticalDifference = raycastHit.point.y - parentPuppet.transform.position.y;
 				return verticalDifference / (parentPuppet.bodyDimensions.legLength * 0.5f);
@@ -146,7 +146,7 @@ namespace PBG.MeatPuppet {
 			// check forward in front of us for ground
 			// if the ground ahead of the puppet is higher
 			
-			var origin = parentPuppet.GetPelvisPoint() + parentPuppet.transform.forward * (parentPuppet.bodyDimensions.bodyRadius * 2f);
+			var origin = parentPuppet.GetHeadPoint() + parentPuppet.transform.forward * (parentPuppet.bodyDimensions.bodyRadius * 2f);
 			var radius = parentPuppet.bodyDimensions.bodyRadius * 0.25f;
 			var direction = Vector3.down;
 			var groundLayer = MeatPuppetManager.Instance.groundLayer;

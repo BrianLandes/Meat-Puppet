@@ -7,7 +7,7 @@ namespace PBG.MeatPuppet {
 
 		override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
 			var animatorHook = animator.GetComponent<MeatPuppetAnimatorHook>();
-			animatorHook.InformOfEmptyState(stateInfo, layerIndex);
+			animatorHook?.InformOfEmptyState(stateInfo, layerIndex);
 		}
 		
 	}

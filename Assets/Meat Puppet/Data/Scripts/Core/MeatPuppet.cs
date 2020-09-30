@@ -181,15 +181,22 @@ namespace PBG.MeatPuppet {
 		private void AutoConfigureBodyDimensions() {
 			// give it automatic dimensions based on the model
 			var capsuleCollider = Collider as CapsuleCollider;
-			var meshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
-			bodyDimensions.bodyRadius = capsuleCollider.radius = meshRenderer.localBounds.extents.z;
-			bodyDimensions.bodyHeight = meshRenderer.localBounds.size.y;
-			capsuleCollider.height = meshRenderer.localBounds.size.y * bodyDimensions.torsoBodyRatio;
-			capsuleCollider.center = Vector3.up * (meshRenderer.localBounds.size.y - capsuleCollider.height * 0.5f);
+			var meshRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+
+			var bounds = new Bounds(meshRenderers[0].bounds.center, meshRenderers[0].bounds.size);
+
+			foreach( var meshRenderer in meshRenderers) {
+				bounds.Encapsulate(meshRenderer.bounds);
+			}
+
+			bodyDimensions.bodyRadius = capsuleCollider.radius = bounds.extents.z;
+			bodyDimensions.bodyHeight = bounds.size.y;
+			capsuleCollider.height = bounds.size.y * bodyDimensions.torsoBodyRatio;
+			capsuleCollider.center = Vector3.up * (bounds.size.y - capsuleCollider.height * 0.5f);
 
 			capsuleCollider.material = MeatPuppetManager.Instance.characterPhysicMaterial;
 
-			bodyDimensions.legLength = meshRenderer.localBounds.size.y - capsuleCollider.height;
+			bodyDimensions.legLength = bounds.size.y - capsuleCollider.height;
 		}
 
 		private void ConfigureRigidBody() {
@@ -199,7 +206,7 @@ namespace PBG.MeatPuppet {
 			}
 			// assign some properties:
 			Rigidbody.isKinematic = false;
-			Rigidbody.angularDrag = 20;
+			Rigidbody.angularDrag = 10;
 			Rigidbody.mass = 3;
 			Rigidbody.drag = 1;
 			Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;

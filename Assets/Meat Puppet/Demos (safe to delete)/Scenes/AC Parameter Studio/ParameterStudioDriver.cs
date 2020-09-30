@@ -29,7 +29,7 @@ public class ParameterStudioDriver : MonoBehaviour {
 		float startingVerticalPosition = 60f;
 
 		GUI.Label(new Rect(labelLeftPosition, startingVerticalPosition, labelWidth, rowHeight), "Forward Speed");
-		forwardSpeed = GUI.HorizontalSlider(new Rect(sliderLeftPosition, startingVerticalPosition + rowSpacing, sliderWidth, rowHeight), forwardSpeed, -1.0F, 2.0F);
+		forwardSpeed = GUI.HorizontalSlider(new Rect(sliderLeftPosition, startingVerticalPosition + rowSpacing, sliderWidth, rowHeight), forwardSpeed, -2.0F, 2.0F);
 		animator.SetFloat("Forward Speed", forwardSpeed);
 		if (GUI.Button(new Rect(buttonLeftPosition, startingVerticalPosition, buttonWidth, rowHeight), "Reset")) {
 			forwardSpeed = 0f;
@@ -47,7 +47,7 @@ public class ParameterStudioDriver : MonoBehaviour {
 		startingVerticalPosition += rowHeight + rowSpacing;
 
 		GUI.Label(new Rect(labelLeftPosition, startingVerticalPosition, labelWidth, rowHeight), "Horizontal Speed");
-		horizontalSpeed = GUI.HorizontalSlider(new Rect(sliderLeftPosition, startingVerticalPosition + rowSpacing, sliderWidth, rowHeight), horizontalSpeed, -1.0F, 1.0F);
+		horizontalSpeed = GUI.HorizontalSlider(new Rect(sliderLeftPosition, startingVerticalPosition + rowSpacing, sliderWidth, rowHeight), horizontalSpeed, -2.0F, 2.0F);
 		animator.SetFloat("Horizontal Speed", horizontalSpeed);
 		if (GUI.Button(new Rect(buttonLeftPosition, startingVerticalPosition, buttonWidth, rowHeight), "Reset")) {
 			horizontalSpeed = 0f;

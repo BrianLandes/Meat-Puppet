@@ -7,9 +7,9 @@ namespace PBG.MeatPuppet {
 
 	[Serializable]
 	public class LegsSettings {
-		[NonSerialized] public float strength = 130f;
+		[NonSerialized] public float strength = 60f;
 
-		[NonSerialized] public float damping = 600f;
+		[NonSerialized] public float damping = 300f;
 
 		[NonSerialized] public float offset = -0.2f;
 
@@ -99,7 +99,7 @@ namespace PBG.MeatPuppet {
 				}
 
 				var strength = parentPuppet.legsSettings.strength;
-				parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength));
+				parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength), ForceMode.Acceleration);
 
 				//Debug.DrawRay(parentPuppet.transform.position + Vector3.right, -GetDirection() * displacement * strength * 0.01f);
 
@@ -107,7 +107,7 @@ namespace PBG.MeatPuppet {
 				float changeInDisplacement = displacement - lastDisplacement;
 
 				var damping = parentPuppet.legsSettings.damping;
-				parentPuppet.Rigidbody.AddForce(-direction * (changeInDisplacement * damping));
+				parentPuppet.Rigidbody.AddForce(-direction * (changeInDisplacement * damping), ForceMode.Acceleration);
 				//Debug.DrawRay(parentPuppet.transform.position + Vector3.forward, -direction * changeInDisplacement * strength * 0.01f, Color.yellow);
 
 				lastDisplacement = displacement;

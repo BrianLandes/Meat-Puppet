@@ -7,6 +7,42 @@ using UnityEngine.Serialization;
 
 namespace PBG.MeatPuppet {
 
+	[Serializable]
+	public class MovementSettings {
+		[FormerlySerializedAs("moveSpeed")]
+		[Header("Basics")]
+		[Tooltip("The top speed this puppet can move while walking, in Unity units.")]
+		public float walkSpeed = 4f;
+		[Tooltip("The top speed this puppet can move while running, in Unity units.")]
+		public float runSpeed = 6f;
+		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
+		[NonSerialized] public float stoppingDistance = 0.7f;
+
+		// [Tooltip("Used to scale and modifier the movement speed.")]
+		// public float moveSpeedModifier = 1f;
+
+		[NonSerialized] public bool avoidStaticObstacles = false;
+
+		[Header("Advanced")]
+		[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
+		public float moveAcceleration = 4f;
+
+		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
+		[NonSerialized] public float brakeFactor = 8f;
+
+		[NonSerialized] public float turnForce = 1.5f;
+		[NonSerialized] public float turnDampening = 80f;
+
+		[NonSerialized] public float preciseTurnForce = 100f;
+
+		[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
+		public float navAgentAllowedDistance = 0.2f;
+
+		public float facingTolerance = 0.1f;
+
+		public float avoidanceForce = 4f;
+	}
+
 	[AddComponentMenu("")]
 	/// <summary>
 	/// Handles a puppet's basic movement.
@@ -51,6 +87,8 @@ namespace PBG.MeatPuppet {
 		private Vector3 facingTargetPoint;
 		private Vector3 facingTargetDirection;
 
+
+		private float lastTurnDifference;
 
 		#endregion
 
@@ -301,6 +339,9 @@ namespace PBG.MeatPuppet {
 					TurnToDirection(angleVector.JustXZ());
 
 				}
+				else {
+					lastTurnDifference = 0f;
+				}
 
 			}
 
@@ -480,7 +521,7 @@ namespace PBG.MeatPuppet {
 			// if the unit is going in the wrong direction.
 			var idealDifference = idealVelocity - currentVelocity;
 			idealDifference.y = 0;
-			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.moveAcceleration, ForceMode.Force);
+			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.moveAcceleration, ForceMode.Acceleration);
 
 		}
 
@@ -489,7 +530,7 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		private void ApplyBrakeForce() {
 			var idealDifference = -parentPuppet.Rigidbody.velocity;
-			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.brakeFactor);
+			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.brakeFactor, ForceMode.Acceleration);
 
 		}
 
@@ -499,9 +540,9 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		/// <param name="xzVector"></param>
 		private void TurnToDirection(Vector2 xzVector) {
+			float difference = DifferenceBetweenGivenFacingAndCurrentFacing(xzVector);
 
 			if (parentPuppet.Rigidbody.isKinematic) {
-				float difference = DifferenceBetweenGivenFacingAndCurrentFacing(xzVector);
 				if (difference > parentPuppet.movementSettings.facingTolerance) {
 					difference = Mathf.Max(difference, 1);
 				}
@@ -512,11 +553,24 @@ namespace PBG.MeatPuppet {
 					Quaternion.Euler(0, difference * parentPuppet.movementSettings.preciseTurnForce * Time.deltaTime, 0));
 			}
 			else {
-				float difference = DifferenceBetweenGivenFacingAndCurrentFacing(xzVector);
 
-				parentPuppet.Rigidbody.AddTorque(0, difference * parentPuppet.movementSettings.turnForce, 0);
+				// add turning force
+				parentPuppet.Rigidbody.AddTorque(0, difference * parentPuppet.movementSettings.turnForce, 0, ForceMode.Acceleration);
+
+				// apply turning dampening (to prevent elasticity)
+				float changeInDifference = difference - lastTurnDifference;
+
+				var damping = parentPuppet.movementSettings.turnDampening;
+				parentPuppet.Rigidbody.AddTorque(0, changeInDifference * damping, 0, ForceMode.Acceleration);
+
 			}
+
+			lastTurnDifference = difference;
+
+			// Prevent the body from rotating on any other axis
 			parentPuppet.Rigidbody.angularVelocity = new Vector3(0, parentPuppet.Rigidbody.angularVelocity.y, 0);
+
+			// keep the body pointing straight up and down
 			if (parentPuppet.Rigidbody.transform.rotation.eulerAngles.x != 0 || parentPuppet.Rigidbody.transform.rotation.eulerAngles.z != 0) {
 				parentPuppet.Rigidbody.transform.rotation = Quaternion.Euler(0, parentPuppet.Rigidbody.transform.rotation.eulerAngles.y, 0);
 			}
@@ -583,37 +637,4 @@ namespace PBG.MeatPuppet {
 
 	}
 
-	[Serializable]
-	public class MovementSettings {
-		[FormerlySerializedAs("moveSpeed")]
-		[Header("Basics")]
-		[Tooltip("The top speed this puppet can move while walking, in Unity units.")]
-		public float walkSpeed = 4f;
-		[Tooltip("The top speed this puppet can move while running, in Unity units.")]
-		public float runSpeed = 6f;
-		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
-		[NonSerialized]public float stoppingDistance = 0.7f;
-
-		// [Tooltip("Used to scale and modifier the movement speed.")]
-		// public float moveSpeedModifier = 1f;
-
-		[NonSerialized]public bool avoidStaticObstacles = false;
-
-		[Header("Advanced")]
-		[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
-		public float moveAcceleration = 4f;
-
-		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
-		[NonSerialized]public float brakeFactor = 8f;
-
-		public float turnForce = 2f;
-		public float preciseTurnForce = 100f;
-
-		[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
-		public float navAgentAllowedDistance = 0.2f;
-
-		public float facingTolerance = 0.1f;
-
-		public float avoidanceForce = 4f;
-	}
 }

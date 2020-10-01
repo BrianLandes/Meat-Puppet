@@ -189,14 +189,14 @@ namespace PBG.MeatPuppet {
 				bounds.Encapsulate(meshRenderer.bounds);
 			}
 
-			bodyDimensions.bodyRadius = capsuleCollider.radius = bounds.extents.z;
-			bodyDimensions.bodyHeight = bounds.size.y;
-			capsuleCollider.height = bounds.size.y * bodyDimensions.torsoBodyRatio;
-			capsuleCollider.center = Vector3.up * (bounds.size.y - capsuleCollider.height * 0.5f);
+			bodyDimensions.bodyRadius = capsuleCollider.radius = bounds.extents.z / transform.localScale.z;
+			bodyDimensions.bodyHeight = bounds.size.y / transform.localScale.y;
+			capsuleCollider.height = bodyDimensions.bodyHeight * bodyDimensions.torsoBodyRatio;
+			capsuleCollider.center = Vector3.up * (bodyDimensions.bodyHeight - capsuleCollider.height * 0.5f);
 
 			capsuleCollider.material = MeatPuppetManager.Instance.characterPhysicMaterial;
 
-			bodyDimensions.legLength = bounds.size.y - capsuleCollider.height;
+			bodyDimensions.legLength = bodyDimensions.bodyHeight - capsuleCollider.height;
 		}
 
 		private void ConfigureRigidBody() {
@@ -206,8 +206,13 @@ namespace PBG.MeatPuppet {
 			}
 			// assign some properties:
 			Rigidbody.isKinematic = false;
-			Rigidbody.angularDrag = 10;
-			Rigidbody.mass = 3;
+			Rigidbody.angularDrag = 1;
+
+			var capsuleCollider = Collider as CapsuleCollider;
+			float capsuleRadius = capsuleCollider.radius * transform.localScale.z;
+			float capsuleHeight = capsuleCollider.height * transform.localScale.y;
+
+			Rigidbody.mass = bodyDimensions.density * MeatPuppetToolKit.VolumeOfCapsule(capsuleHeight, capsuleRadius);
 			Rigidbody.drag = 1;
 			Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 		}
@@ -226,12 +231,14 @@ namespace PBG.MeatPuppet {
 	public class BodyDimensions {
 		public bool autoConfigure = true;
 
-		public float torsoBodyRatio = 0.7f;
+		[NonSerialized] public float torsoBodyRatio = 0.7f;
 
-		public float legLength;
+		[NonSerialized] public float density = 10f;
 
-		public float bodyRadius;
-		public float bodyHeight;
+		[NonSerialized] public float legLength;
+
+		[NonSerialized] public float bodyRadius;
+		[NonSerialized] public float bodyHeight;
 
 	}
 

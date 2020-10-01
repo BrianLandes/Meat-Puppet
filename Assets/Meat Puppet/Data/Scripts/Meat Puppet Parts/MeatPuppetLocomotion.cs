@@ -73,12 +73,12 @@ namespace PBG.MeatPuppet {
 			}
 			
 			float forwardSpeed = velocity.z*speedFactor;
-			forwardSpeed = MeatPuppetManager.Instance.forwardSpeedCurve.Evaluate(forwardSpeed);
+			//forwardSpeed = MeatPuppetManager.Instance.forwardSpeedCurve.Evaluate(forwardSpeed);
 			lastForwardSpeed = Mathf.Lerp(lastForwardSpeed, forwardSpeed, forwardSpeedSmoothing* Time.deltaTime);
 			parentPuppet.AnimatorHook.Animator.SetFloat(forwardSpeedKey, lastForwardSpeed);
 
 			float horizontalSpeed = velocity.x*speedFactor;
-			horizontalSpeed = MeatPuppetManager.Instance.forwardSpeedCurve.Evaluate(horizontalSpeed);
+			//horizontalSpeed = MeatPuppetManager.Instance.forwardSpeedCurve.Evaluate(horizontalSpeed);
 			lastHorizontalSpeed = Mathf.Lerp(lastHorizontalSpeed, horizontalSpeed, horizontalSpeedSmoothing* Time.deltaTime);
 			parentPuppet.AnimatorHook.Animator.SetFloat(horizontalSpeedKey, lastHorizontalSpeed);
 

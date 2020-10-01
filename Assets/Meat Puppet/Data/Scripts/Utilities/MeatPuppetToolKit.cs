@@ -64,6 +64,10 @@ namespace PBG.MeatPuppet {
 
 			return true;
 		}
+
+		public static float VolumeOfCapsule(float sideLength, float radius) {
+			return Mathf.PI * radius * radius * ( (4f/3f)* radius + sideLength );
+		}
 	}
 }
 

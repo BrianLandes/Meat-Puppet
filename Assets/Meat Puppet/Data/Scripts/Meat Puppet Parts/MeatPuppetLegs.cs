@@ -7,11 +7,11 @@ namespace PBG.MeatPuppet {
 
 	[Serializable]
 	public class LegsSettings {
-		[NonSerialized] public float strength = 60f;
+		public float strength = 60f;
 
-		[NonSerialized] public float damping = 300f;
+		public float damping = 300f;
 
-		[NonSerialized] public float offset = -0.2f;
+		public float offset = 0f;
 
 		public bool inheritGroundsVelocity = true;
 	}
@@ -79,18 +79,14 @@ namespace PBG.MeatPuppet {
 		/// If no ground is detected, the puppet is considered 'ungrounded'.
 		/// </summary>
 		private void UpdateNormal() {
-			//float offset = -parentPuppet.bodyDimensions.legLength * 0.66f;
-
-			// TODO: figure out the offset automatically by measuring the difference when at rest
-
+			
 			var distance = parentPuppet.bodyDimensions.legLength * 1.66f;
-			//var distance = parentPuppet.bodyDimensions.legLength - offset;
 
 			if (CastForGround(distance, out var raycastHit)) {
 
-				// lastOffset = CalculateOffset(lastOffset, raycastHit.point.y, parentPuppet.transform.position.y);
+				var autoOffset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
 
-				float targetPosition = parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
+				float targetPosition = autoOffset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
 				float displacement = raycastHit.point.y- targetPosition;
 				var direction = GetDirection();
 				

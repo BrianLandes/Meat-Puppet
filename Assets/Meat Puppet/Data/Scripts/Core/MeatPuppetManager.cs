@@ -15,7 +15,7 @@ namespace PBG.MeatPuppet {
 
 		public PhysicMaterial characterPhysicMaterial;
 
-		public AnimationCurve forwardSpeedCurve;
+		//public AnimationCurve forwardSpeedCurve;
 		
 		public static MeatPuppetManager Instance {
 			get {

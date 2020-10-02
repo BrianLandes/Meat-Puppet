@@ -5,7 +5,7 @@ namespace PBG.MeatPuppet {
 	[RequireComponent(typeof(Collider))]
 	public class ColliderVelocity : MonoBehaviour {
 
-		public float minDeltaTime = 0.01f;
+		public float minDeltaTime = 0.1f;
 
 		float lastTime;
 		private Vector3 lastPosition;

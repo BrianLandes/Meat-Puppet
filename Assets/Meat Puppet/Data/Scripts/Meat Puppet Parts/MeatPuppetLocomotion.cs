@@ -31,6 +31,8 @@ namespace PBG.MeatPuppet {
 
 		private MeatPuppet parentPuppet;
 
+		private float slopeSpeedModifier = 1f;
+
 		private readonly int forwardSpeedKey;
 		private readonly int horizontalSpeedKey;
 		private readonly int turnSpeedKey;
@@ -85,6 +87,9 @@ namespace PBG.MeatPuppet {
 			parentPuppet.AnimatorHook.Animator.SetFloat(turnSpeedKey, lastAngularSpeed.y * turnSpeedFactor, turnSpeedSmoothing, Time.deltaTime);
 
 			float groundSteep = CalculateGroundSteep();
+			// if groundSteep > 0 -> reduce speedModifer from 1f -> 0f
+			slopeSpeedModifier = 1f - Mathf.Max(0f, groundSteep);
+
 			parentPuppet.AnimatorHook.Animator.SetFloat(groundSteepKey, groundSteep, turnSpeedSmoothing, Time.deltaTime);
 		}
 
@@ -134,7 +139,7 @@ namespace PBG.MeatPuppet {
 			var distance = parentPuppet.bodyDimensions.legLength + parentPuppet.bodyDimensions.bodyHeight;
 			if (CastForGround(distance, out var raycastHit)) {
 				float verticalDifference = raycastHit.point.y - parentPuppet.transform.position.y;
-				return verticalDifference / (parentPuppet.bodyDimensions.legLength * 0.5f);
+				return verticalDifference / (parentPuppet.bodyDimensions.legLength * 1.0f);
 			}
 			else {
 				return -1f;
@@ -180,6 +185,10 @@ namespace PBG.MeatPuppet {
 			}
 
 			return closestHitDistance >= 0;
+		}
+
+		public float GetSlopeSpeedModifier() {
+			return slopeSpeedModifier;
 		}
 	}
 }

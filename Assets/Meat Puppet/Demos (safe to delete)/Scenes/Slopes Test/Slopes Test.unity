@@ -810,22 +810,18 @@ MonoBehaviour:
     walkSpeed: 4
     runSpeed: 6
     moveAcceleration: 4
-    turnForce: 2
-    preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
     facingTolerance: 0.1
     avoidanceForce: 4
   legsSettings:
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
     useJumpBoost: 1
   bodyDimensions:
     autoConfigure: 1
-    torsoBodyRatio: 0.7
-    legLength: 0
-    bodyRadius: 0
-    bodyHeight: 0
 --- !u!1 &504857788
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,22 +1529,18 @@ MonoBehaviour:
     walkSpeed: 4
     runSpeed: 6
     moveAcceleration: 4
-    turnForce: 2
-    preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
     facingTolerance: 0.1
     avoidanceForce: 4
   legsSettings:
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
     useJumpBoost: 1
   bodyDimensions:
     autoConfigure: 1
-    torsoBodyRatio: 0.7
-    legLength: 0
-    bodyRadius: 0
-    bodyHeight: 0
 --- !u!1 &616993559
 GameObject:
   m_ObjectHideFlags: 0
@@ -2107,22 +2099,18 @@ MonoBehaviour:
     walkSpeed: 4
     runSpeed: 6
     moveAcceleration: 4
-    turnForce: 2
-    preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
     facingTolerance: 0.1
     avoidanceForce: 4
   legsSettings:
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
     useJumpBoost: 1
   bodyDimensions:
     autoConfigure: 1
-    torsoBodyRatio: 0.7
-    legLength: 0
-    bodyRadius: 0
-    bodyHeight: 0
 --- !u!1 &1100493491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3697,22 +3685,18 @@ MonoBehaviour:
     walkSpeed: 4
     runSpeed: 6
     moveAcceleration: 4
-    turnForce: 2
-    preciseTurnForce: 100
     navAgentAllowedDistance: 0.2
     facingTolerance: 0.1
     avoidanceForce: 4
   legsSettings:
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
     useJumpBoost: 1
   bodyDimensions:
     autoConfigure: 1
-    torsoBodyRatio: 0.7
-    legLength: 0
-    bodyRadius: 0
-    bodyHeight: 0
 --- !u!1 &1932759446
 GameObject:
   m_ObjectHideFlags: 0

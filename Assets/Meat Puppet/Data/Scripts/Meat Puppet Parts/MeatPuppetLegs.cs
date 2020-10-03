@@ -7,11 +7,13 @@ namespace PBG.MeatPuppet {
 
 	[Serializable]
 	public class LegsSettings {
-		public float strength = 60f;
+		[NonSerialized] public float strength = 20f;
 
-		public float damping = 300f;
+		[NonSerialized] public float damping = 80f;
 
 		public float offset = 0f;
+
+		public float slopeSpeedModifier = 1.8f;
 
 		public bool inheritGroundsVelocity = true;
 	}
@@ -139,8 +141,8 @@ namespace PBG.MeatPuppet {
 					}
 				}
 
-
-				slopeSpeedModifier = raycastHit.normal.y;
+				float newModifier = 1f - (1f - raycastHit.normal.y) * parentPuppet.legsSettings.slopeSpeedModifier;
+				slopeSpeedModifier = slopeSpeedModifier + (newModifier - slopeSpeedModifier) * 0.4f;
 
 				UpdateGrounded( true );
 			}

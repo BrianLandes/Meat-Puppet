@@ -287,9 +287,9 @@ namespace PBG.MeatPuppet {
 			//	moveVector = ModifyMoveVectorForAvoidance(moveVector);
 			//}
 
-			if (parentPuppet.movementSettings.avoidStaticObstacles) {
-				moveVector = GetVectorToAvoidStaticObstacles(moveVector);
-			}
+			//if (parentPuppet.movementSettings.avoidStaticObstacles) {
+			//	moveVector = GetVectorToAvoidStaticObstacles(moveVector);
+			//}
 
 			// As long as the direction isn't zero -> apply some force in that direction
 			if (moveVector.sqrMagnitude > 0.01f) {
@@ -508,7 +508,7 @@ namespace PBG.MeatPuppet {
 
 			// modify the speed
 			// idealVelocity *= parentPuppet.movementSettings.moveSpeedModifier;
-			idealVelocity *= parentPuppet.Legs.GetSlopeSpeedModifier();
+			idealVelocity *= Mathf.Min( parentPuppet.Legs.GetSlopeSpeedModifier(), parentPuppet.Locomotion.GetSlopeSpeedModifier());
 
 			var currentVelocity = parentPuppet.Rigidbody.velocity.DropY();
 

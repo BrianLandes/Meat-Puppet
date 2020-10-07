@@ -40,29 +40,37 @@ namespace PBG.MeatPuppet {
 				return false;
 			}
 
+			// one 'cheat' we can do is check for zeroes
+			if (distance>0 && x==0 && y == 0) {
+				return true;
+			}
+
 			float distanceSqrd = distance * distance;
 			return distanceSqrd > x * x + y * y;
 		}
 
-		public static bool PointAndPointWithinDistanceOfEachOther(Vector3 A, Vector3 B, float distance, float yAxisTolerance = 3) {
-			bool xzPlaneResult = PointAndPointWithinDistanceOfEachOther(A.JustXZ(), B.JustXZ(), distance);
-
-			if (!xzPlaneResult) {
+		public static bool PointAndPointWithinDistanceOfEachOther(Vector3 A, Vector3 B, float distance ) {
+			float x = A.x - B.x;
+			if (Mathf.Abs(x) > distance) {
 				return false;
 			}
-
-			// For our purposes, we care mostly about the distance across the xz plane, and usually ignore
-			// the y-axis
-			// Here in the algorithm, the two points are within the distance we want on the xz plane
-			// Let's check the y axis, as well, but allow a lot of leeway, or 'tolerance'
-
 			float y = A.y - B.y;
-			if (Mathf.Abs(y) > distance + yAxisTolerance) {
+			if (Mathf.Abs(y) > distance) {
 				return false;
 			}
-			// this causes this distance check to result in a cylinder shape, instead of a sphere
+			float z = A.z - B.z;
+			if (Mathf.Abs(z) > distance) {
+				return false;
+			}
 
-			return true;
+			// one 'cheat' we can do is check for zeroes
+			if (distance > 0 && x == 0 && y == 0 && z == 0) {
+				// who knows how much this hurts or helps?
+				return true;
+			}
+
+			float distanceSqrd = distance * distance;
+			return distanceSqrd > x * x + y * y + z * z;
 		}
 
 		public static float VolumeOfCapsule(float sideLength, float radius) {

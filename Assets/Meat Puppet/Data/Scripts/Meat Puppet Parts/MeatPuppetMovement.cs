@@ -28,6 +28,9 @@ namespace PBG.MeatPuppet {
 		[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
 		public float moveAcceleration = 4f;
 
+		[Tooltip("Whether or not to disable movement when the puppet does not have their feet on the ground.")]
+		public bool disableMovementWhenUngrounded = false;
+
 		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
 		public float brakeFactor = 8f;
 
@@ -133,18 +136,32 @@ namespace PBG.MeatPuppet {
 			navAgent.enabled = false;
 		}
 
-		public float GetSquaredDistanceToTarget() {
+		//public float GetSquaredDistanceToTarget() {
+		//	switch (moveInputType) {
+		//		case InputType.Point:
+		//		case InputType.Transform:
+		//			var currentPosition = transform.position;
+		//			var targetPosition = GetMoveTargetPoint();
+		//			var difference = targetPosition - currentPosition;
+		//			return difference.sqrMagnitude;
+
+		//		default:
+		//		case InputType.Direction:
+		//			return -1;
+		//	}
+		//}
+
+		public bool IsDistanceToTargetLessThan(float value) {
 			switch (moveInputType) {
 				case InputType.Point:
 				case InputType.Transform:
 					var currentPosition = transform.position;
 					var targetPosition = GetMoveTargetPoint();
-					var difference = targetPosition - currentPosition;
-					return difference.sqrMagnitude;
+					return MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(currentPosition, targetPosition, value);
 
 				default:
 				case InputType.Direction:
-					return -1;
+					return false;
 			}
 		}
 
@@ -161,24 +178,8 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
-		public bool ReachedTarget {
-			get {
-				switch (moveInputType) {
-					case InputType.Point:
-					case InputType.Transform:
-						var currentPosition = transform.position;
-						var targetPosition = GetMoveTargetPoint();
-						bool distanceResult =
-							MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(
-								currentPosition, targetPosition, parentPuppet.movementSettings.stoppingDistance);
-						return distanceResult;
-
-					default:
-					case InputType.Direction:
-						return false;
-				}
-
-			}
+		public bool ReachedTarget() {
+			return IsDistanceToTargetLessThan(parentPuppet.movementSettings.stoppingDistance);
 		}
 
 		#endregion
@@ -223,19 +224,16 @@ namespace PBG.MeatPuppet {
 			
 			UpdateNavAgent();
 
-			//if (IsGrounded()) {
-
-			// if we have a target and we're close to that target and we want to be ~exactly on top of that target -> use 'fake' movement
-			if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= 0.01f && GetSquaredDistanceToTarget() < 1f) {
-				// 'fake' the movement in order to get us exactly to that position
-				UpdatePositionUsingPreciseMovement();
+			if (!parentPuppet.movementSettings.disableMovementWhenUngrounded || parentPuppet.Legs.IsGrounded) {
+				// if we have a target and we're close to that target and we want to be ~exactly on top of that target -> use 'fake' movement
+				if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= 0.02f && IsDistanceToTargetLessThan(1f) ) {
+					// 'fake' the movement in order to get us exactly to that position
+					UpdatePositionUsingPreciseMovement();
+				}
+				else {
+					UpdatePosition();
+				}
 			}
-			else {
-				UpdatePosition();
-			}
-
-
-			//}
 
 			UpdateRotation();
 
@@ -247,7 +245,7 @@ namespace PBG.MeatPuppet {
 
 		private void UpdatePosition() {
 
-			if (!HasMoveTarget() || ReachedTarget) {
+			if (!HasMoveTarget() || ReachedTarget()) {
 				// If we're within stopping distance of the target -> bring the unit to a stop
 				ApplyBrakeForce();
 
@@ -366,7 +364,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		private void UpdateNavAgent() {
-			if (!HasMoveTarget() || ReachedTarget) {
+			if (!HasMoveTarget() || ReachedTarget()) {
 				navAgent.enabled = false;
 			}
 			//else if (!IsGrounded()) {
@@ -382,8 +380,10 @@ namespace PBG.MeatPuppet {
 				// 2. if the puppet is off the navmesh, the navagent will teleport to the closest navmesh point
 
 				// for issue #1 -> check that the two positions are within some threshold
-				if ((navAgent.nextPosition - transform.position).sqrMagnitude > 
-						parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+				if ( !MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(navAgent.nextPosition, transform.position,
+					parentPuppet.movementSettings.navAgentAllowedDistance) ) { 
+				//if ((navAgent.nextPosition - transform.position).sqrMagnitude > 
+				//		parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
 
 					// if they are not -> teleport the navagent to our position
 					navAgent.enabled = false;
@@ -402,8 +402,10 @@ namespace PBG.MeatPuppet {
 
 				// for issue #2 -> check the two positions AGAIN, and if they are not the same at this point
 				//    we can assume that the puppet is stuck off the navmesh
-				if ((navAgent.nextPosition - transform.position).sqrMagnitude >
-						parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+				if ( !MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(navAgent.nextPosition, transform.position,
+						parentPuppet.movementSettings.navAgentAllowedDistance)) {
+				//if ((navAgent.nextPosition - transform.position).sqrMagnitude >
+				//		parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
 
 					// TODO: if they are not -> teleport the navagent to our position
 
@@ -525,6 +527,7 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		private void ApplyBrakeForce() {
 			var idealDifference = -parentPuppet.Rigidbody.velocity;
+			idealDifference.y = 0;
 			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.brakeFactor, ForceMode.Acceleration);
 
 		}

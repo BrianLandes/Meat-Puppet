@@ -34,7 +34,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		private void Update() {
-			if (meatPuppet.Movement.ReachedTarget) {
+			if (meatPuppet.Movement.ReachedTarget()) {
 				moveTarget.position = GetRandomPathablePointInCircle(center.position, radius);
 			}
 		}

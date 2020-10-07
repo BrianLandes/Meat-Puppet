@@ -9,6 +9,7 @@ public class ParameterStudioDriver : MonoBehaviour {
 	public float turnSpeed = 0.0F;
 	public float horizontalSpeed = 0.0F;
 	public float groundSteep = 0.0F;
+	public float landForce = 0.0F;
 
 	private bool jumping = false;
 
@@ -60,8 +61,14 @@ public class ParameterStudioDriver : MonoBehaviour {
 		if (GUI.Button(new Rect(buttonLeftPosition, startingVerticalPosition, buttonWidth, rowHeight), "Reset")) {
 			groundSteep = 0f;
 		}
+		startingVerticalPosition += rowHeight + rowSpacing;
 
-		
+		GUI.Label(new Rect(labelLeftPosition, startingVerticalPosition, labelWidth, rowHeight), "Land Force");
+		landForce = GUI.HorizontalSlider(new Rect(sliderLeftPosition, startingVerticalPosition + rowSpacing, sliderWidth, rowHeight), landForce, 0.0F, 1.0F);
+		animator.SetFloat("Land Force", landForce);
+		if (GUI.Button(new Rect(buttonLeftPosition, startingVerticalPosition, buttonWidth, rowHeight), "Reset")) {
+			landForce = 0f;
+		}
 		startingVerticalPosition += rowHeight + rowSpacing;
 
 		if (!jumping) {

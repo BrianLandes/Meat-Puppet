@@ -7,9 +7,9 @@ namespace PBG.MeatPuppet {
 
 	[Serializable]
 	public class LegsSettings {
-		[NonSerialized] public float strength = 20f;
+		[NonSerialized] public float strength = 50f;
 
-		[NonSerialized] public float damping = 80f;
+		[NonSerialized] public float damping = 160f;
 
 		public float offset = 0f;
 
@@ -39,7 +39,7 @@ namespace PBG.MeatPuppet {
 		/// <summary>
 		/// The minimum time to spend in Jump mode before trying to switch back.
 		/// </summary>
-		private float minJumpTime = 0.8f;
+		private float minJumpTime = 0.1f;
 		private float minJumpTimer = 0.0f;
 
 		private float ungroundedDelay = 0.3f;
@@ -130,8 +130,8 @@ namespace PBG.MeatPuppet {
 					}
 				}
 
-				float newModifier = 1f - (1f - raycastHit.normal.y) * parentPuppet.legsSettings.slopeSpeedModifier;
-				slopeSpeedModifier = slopeSpeedModifier + (newModifier - slopeSpeedModifier) * 0.4f;
+				//float newModifier = 1f - (1f - raycastHit.normal.y) * parentPuppet.legsSettings.slopeSpeedModifier;
+				//slopeSpeedModifier = slopeSpeedModifier + (newModifier - slopeSpeedModifier) * 0.4f;
 
 				UpdateGrounded( true );
 			}
@@ -150,24 +150,34 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		private void UpdateJump() {
 			// Remain in Jump mode until a variety of conditions are met
-			UpdateGrounded(false);
+			//UpdateGrounded(false);
+			slopeSpeedModifier = 1f;
+
 			// stay in jump mode for a minimum amount of time
 			if (minJumpTimer > 0) {
 				minJumpTimer -= Time.deltaTime;
+				UpdateGrounded(false);
 				return;
 			}
 			
 			if (parentPuppet.Rigidbody.velocity.y > 0) {
 				// if we're moving upwards -> remain in Jump mode
+				UpdateGrounded(false);
 				return;
 			}
-			
+
+			var landForce = -parentPuppet.Rigidbody.velocity.y / 5f - 0.4f;
+			parentPuppet.AnimatorHook.Animator.SetFloat("Land Force", landForce);
+
 			// check for ground within leg distance
 			var distance = parentPuppet.bodyDimensions.legLength;
 			if (CastForGround(distance, out var distanceToGround, out var raycastHit)) {
 				// if there IS ground -> switch back to normal mode
 				mode = Mode.Normal;
 				UpdateGrounded( true );
+			}
+			else {
+				UpdateGrounded(false);
 			}
 		}
 
@@ -265,6 +275,8 @@ namespace PBG.MeatPuppet {
 		public void StartJumpMode() {
 			mode = Mode.Jumping;
 			minJumpTimer = minJumpTime;
+			ungroundedDelayTimer = 0;
+			UpdateGrounded(false);
 		}
 		
 		private float CalculateOffset(float currentOffset, float groundY, float puppetY) {

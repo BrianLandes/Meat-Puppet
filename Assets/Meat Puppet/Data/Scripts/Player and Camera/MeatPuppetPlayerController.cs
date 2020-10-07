@@ -16,19 +16,20 @@ namespace PBG.MeatPuppet {
 		private void Start() {
 			puppet = GetComponent<MeatPuppet>();
 
-			puppet.movementSettings.avoidStaticObstacles = false;
+			//puppet.movementSettings.avoidStaticObstacles = false;
 		}
 
 		private void Update() {
 			
-			puppet.Movement.TargetDirection = GetPlayerInput();
+			puppet.Movement.SetMoveTargetDirection( GetPlayerInput() );
 
 			if (faceForward) {
 				Transform cameraTransform = Camera.main.transform;
-				puppet.Movement.LookAtDirection = cameraTransform.forward;
+				puppet.Movement.SetFacingTargetDirection(cameraTransform.forward);
+				//puppet.Movement.FacingTargetDirection = cameraTransform.forward;
 			}
 			else {
-				puppet.Movement.StopLookAt();
+				puppet.Movement.RemoveFacingTarget();
 			}
 			
 			if (puppet.jumpSettings.enableJump) {

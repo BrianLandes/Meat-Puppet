@@ -12,9 +12,10 @@ namespace PBG.MeatPuppet {
 		}
 
 		public void AssignTargets() {
-			
-			puppet.Movement.MoveTargetTransform = moveTarget;
-			puppet.Movement.FacingTargetTransform = facingTarget;
+			puppet.Movement.SetMoveTarget(moveTarget);
+			puppet.Movement.SetFacingTarget(facingTarget);
+			//puppet.Movement.MoveTargetTransform = moveTarget;
+			//puppet.Movement.FacingTargetTransform = facingTarget;
 		}
 
 #if UNITY_EDITOR

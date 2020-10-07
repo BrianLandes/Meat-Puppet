@@ -15,7 +15,8 @@ namespace PBG.MeatPuppet {
 		public float waitTime = 6f;
 
 		private void Start() {
-			meatPuppet.Movement.FacingTargetTransform = facingTarget;
+			meatPuppet.Movement.SetFacingTarget(facingTarget);
+			//meatPuppet.Movement.FacingTargetTransform = facingTarget;
 
 			StartCoroutine(CycleTargets());
 		}

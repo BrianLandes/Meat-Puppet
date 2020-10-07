@@ -6,41 +6,46 @@ using UnityEngine.AI;
 using UnityEngine.Serialization;
 
 namespace PBG.MeatPuppet {
-
+	/// <summary>
+	/// A serializable data class for sharing values/settings between the Movement component and its parent puppet.
+	/// </summary>
 	[Serializable]
 	public class MovementSettings {
-		[FormerlySerializedAs("moveSpeed")]
+		
 		[Header("Basics")]
 		[Tooltip("The top speed this puppet can move while walking, in Unity units.")]
 		public float walkSpeed = 4f;
+
 		[Tooltip("The top speed this puppet can move while running, in Unity units.")]
 		public float runSpeed = 6f;
+
 		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
-		[NonSerialized] public float stoppingDistance = 0.7f;
-
-		// [Tooltip("Used to scale and modifier the movement speed.")]
-		// public float moveSpeedModifier = 1f;
-
-		[NonSerialized] public bool avoidStaticObstacles = false;
+		public float stoppingDistance = 0.7f;
+		
+		//[NonSerialized] public bool avoidStaticObstacles = false; // experimental feature, not ready
 
 		[Header("Advanced")]
 		[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
 		public float moveAcceleration = 4f;
 
 		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
-		[NonSerialized] public float brakeFactor = 8f;
+		public float brakeFactor = 8f;
 
-		[NonSerialized] public float turnForce = 1.5f;
-		[NonSerialized] public float turnDampening = 80f;
+		[Tooltip("The amount of angular force applied to turn the puppet.")]
+		public float turnForce = 1.5f;
 
+		[Tooltip("The amount of dampening to apply when turning (reduces elasticity).")]
+		public float turnDampening = 80f;
+
+		[Tooltip("The turn force to use when the puppet is kinematic.")]
 		[NonSerialized] public float preciseTurnForce = 100f;
 
 		[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
-		public float navAgentAllowedDistance = 0.2f;
+		public float navAgentAllowedDistance = 0.4f;
 
-		public float facingTolerance = 0.1f;
+		[Tooltip("The threshold to use when determining if the puppet has reached the target facing position.")]
+		[NonSerialized] public float facingTolerance = 0.1f;
 
-		public float avoidanceForce = 4f;
 	}
 
 	[AddComponentMenu("")]
@@ -48,15 +53,19 @@ namespace PBG.MeatPuppet {
 	/// Handles a puppet's basic movement.
 	/// Unity NavMesh Agent is used for pathfinding, but actual translation
 	/// is handled manually by applying force to the puppet's rigidbody.
+	/// 
+	/// Allows other scripts and systems to give the puppet either a destination (in the form of
+	/// either a Vector3 world position OR a Transform) OR just a direction to move.
+	/// 
+	/// Also allows other scripts and systems to give the puppet a 'facing target', causing
+	/// the puppet to turn to face that position, even while moving to another position.
+	/// 
+	/// Should not be added to a gameobject manually; is automatically created by the MeatPuppet component.
 	/// </summary>
 	public class MeatPuppetMovement : MonoBehaviour {
 
 		// TODO: better static avoidance
 		// TODO: avoid other puppets
-		// TODO: rename everything
-		// TODO: demote from a MonoBehaviour
-		// TODO: Grounded
-		// TODO: stairs
 
 		private MeatPuppet parentPuppet;
 
@@ -96,44 +105,30 @@ namespace PBG.MeatPuppet {
 
 		#region Move Target
 
-		public Transform MoveTargetTransform {
-			get {
-				return moveTargetTransform;
-			}
-			set {
-				hasMoveTarget = value != null;
-				moveTargetTransform = value;
-				moveInputType = InputType.Transform;
-			}
+		public void SetMoveTarget(Transform target) {
+			hasMoveTarget = target != null;
+			moveTargetTransform = target;
+			moveInputType = InputType.Transform;
 		}
 
-		public Vector3 TargetPoint {
-			get {
-				return moveTargetPoint;
-			}
-			set {
-				moveTargetPoint = value;
-				moveInputType = InputType.Point;
-				hasMoveTarget = true;
-			}
+		public void SetMoveTarget(Vector3 target) {
+			hasMoveTarget = true;
+			moveTargetPoint = target;
+			moveInputType = InputType.Point;
 		}
 
-		public Vector3 TargetDirection {
-			get {
-				return moveTargetDirection;
-			}
-			set {
-				moveTargetDirection = value;
-				moveInputType = InputType.Direction;
-				hasMoveTarget = moveTargetDirection != Vector3.zero;
-			}
+		public void SetMoveTargetDirection(Vector3 direction ) {
+			hasMoveTarget = moveTargetDirection != Vector3.zero;
+			moveTargetDirection = direction;
+			moveInputType = InputType.Direction;
+			// TODO: allow the direction to optionally still use the navpath
 		}
-
+		
 		public bool HasMoveTarget() {
 			return hasMoveTarget;
 		}
 
-		public void SetNoMoveTarget() {
+		public void RemoveMoveTarget() {
 			hasMoveTarget = false;
 			navAgent.enabled = false;
 		}
@@ -143,7 +138,7 @@ namespace PBG.MeatPuppet {
 				case InputType.Point:
 				case InputType.Transform:
 					var currentPosition = transform.position;
-					var targetPosition = GetTargetPoint();
+					var targetPosition = GetMoveTargetPoint();
 					var difference = targetPosition - currentPosition;
 					return difference.sqrMagnitude;
 
@@ -153,14 +148,14 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
-		public Vector3 GetTargetPoint() {
+		public Vector3 GetMoveTargetPoint() {
 
 			switch (moveInputType) {
 				default:
 				case InputType.Point:
-					return TargetPoint;
+					return moveTargetPoint;
 				case InputType.Transform:
-					return MoveTargetTransform.position;
+					return moveTargetTransform.position;
 				case InputType.Direction:
 					throw new NotImplementedException();
 			}
@@ -172,7 +167,7 @@ namespace PBG.MeatPuppet {
 					case InputType.Point:
 					case InputType.Transform:
 						var currentPosition = transform.position;
-						var targetPosition = GetTargetPoint();
+						var targetPosition = GetMoveTargetPoint();
 						bool distanceResult =
 							MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(
 								currentPosition, targetPosition, parentPuppet.movementSettings.stoppingDistance);
@@ -190,40 +185,25 @@ namespace PBG.MeatPuppet {
 
 		#region Facing Target
 
-		public Transform FacingTargetTransform {
-			get {
-				return facingTargetTransform;
-			}
-			set {
-				hasFacingTarget = value != null;
-				facingTargetTransform = value;
-				facingInputType = InputType.Transform;
-			}
+		public void SetFacingTarget( Transform target ) {
+			hasFacingTarget = target != null;
+			facingTargetTransform = target;
+			facingInputType = InputType.Transform;
 		}
 
-		public Vector3 LookAtPoint {
-			get {
-				return facingTargetPoint;
-			}
-			set {
-				facingTargetPoint = value;
-				facingInputType = InputType.Point;
-				hasFacingTarget = true;
-			}
+		public void SetFacingTarget(Vector3 target) {
+			hasFacingTarget = true;
+			facingTargetPoint = target;
+			facingInputType = InputType.Point;
 		}
 
-		public Vector3 LookAtDirection {
-			get {
-				return facingTargetDirection;
-			}
-			set {
-				facingTargetDirection = value;
-				facingInputType = InputType.Direction;
-				hasFacingTarget = true;
-			}
+		public void SetFacingTargetDirection(Vector3 direction) {
+			hasFacingTarget = true;
+			facingTargetDirection = direction;
+			facingInputType = InputType.Direction;
 		}
-
-		public void StopLookAt() {
+		
+		public void RemoveFacingTarget() {
 			hasFacingTarget = false;
 		}
 
@@ -240,17 +220,19 @@ namespace PBG.MeatPuppet {
 		}
 
 		public void FixedUpdate() {
-
-			//UpdateGrounded();
+			
 			UpdateNavAgent();
 
 			//if (IsGrounded()) {
-				if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= 0.01f && GetSquaredDistanceToTarget() < 1f) {
-					UpdatePositionUsingPreciseMovement();
-				}
-				else {
-					UpdatePosition();
-				}
+
+			// if we have a target and we're close to that target and we want to be ~exactly on top of that target -> use 'fake' movement
+			if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= 0.01f && GetSquaredDistanceToTarget() < 1f) {
+				// 'fake' the movement in order to get us exactly to that position
+				UpdatePositionUsingPreciseMovement();
+			}
+			else {
+				UpdatePosition();
+			}
 
 
 			//}
@@ -311,8 +293,6 @@ namespace PBG.MeatPuppet {
 		private void UpdatePositionUsingPreciseMovement() {
 			var moveVector = GetMoveVector();
 			var velocity = moveVector * GetTopSpeed() * 0.6f;
-			//var newPosition = myBody.position + moveVector * moveSpeed * moveSpeedModifier * Time.deltaTime ;
-			//myBody.MovePosition(newPosition);
 			parentPuppet.Rigidbody.velocity = velocity;
 		}
 
@@ -397,15 +377,21 @@ namespace PBG.MeatPuppet {
 				navAgent.enabled = false;
 			}
 			else {
+				// Unity's NavAgent has a few issues:
+				// 1. the navagent has its own position and sometimes it is not the same as the transform
+				// 2. if the puppet is off the navmesh, the navagent will teleport to the closest navmesh point
+
+				// for issue #1 -> check that the two positions are within some threshold
 				if ((navAgent.nextPosition - transform.position).sqrMagnitude > 
 						parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+
+					// if they are not -> teleport the navagent to our position
 					navAgent.enabled = false;
 					navAgent.nextPosition = transform.position;
 				}
-
-
+				
 				navAgent.enabled = true;
-				navAgent.destination = GetTargetPoint();
+				navAgent.destination = GetMoveTargetPoint();
 				navAgent.stoppingDistance = parentPuppet.movementSettings.stoppingDistance;
 
 				// Force the simulated navAgent to maintain the same speed as the actual body
@@ -413,6 +399,15 @@ namespace PBG.MeatPuppet {
 				
 				navAgent.speed = GetTopSpeed();
 				navAgent.acceleration = parentPuppet.movementSettings.moveAcceleration * Time.fixedDeltaTime;
+
+				// for issue #2 -> check the two positions AGAIN, and if they are not the same at this point
+				//    we can assume that the puppet is stuck off the navmesh
+				if ((navAgent.nextPosition - transform.position).sqrMagnitude >
+						parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+
+					// TODO: if they are not -> teleport the navagent to our position
+
+				}
 			}
 		}
 		private bool UseNavAgentPath() {
@@ -455,7 +450,7 @@ namespace PBG.MeatPuppet {
 				case InputType.Point:
 				case InputType.Transform: {
 
-						var target = GetTargetPoint();
+						var target = GetMoveTargetPoint();
 
 						Vector3 direction;
 
@@ -481,13 +476,13 @@ namespace PBG.MeatPuppet {
 			switch (facingInputType) {
 				default:
 				case InputType.Point: {
-						var vector = LookAtPoint - transform.position;
+						var vector = facingTargetPoint - transform.position;
 						// TODO: Make sure the vector isn't zero
 						// TODO: don't normalize it if it is already less than one
 						return vector.normalized;
 					}
 				case InputType.Transform: {
-						var vector = FacingTargetTransform.position - transform.position;
+						var vector = facingTargetTransform.position - transform.position;
 						// TODO: Make sure the vector isn't zero
 						// TODO: don't normalize it if it is already less than one
 						return vector.normalized;
@@ -576,62 +571,62 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
-		private Vector3 GetVectorToAvoidStaticObstacles(Vector3 moveVector) {
-			var direction = parentPuppet.Rigidbody.velocity;
-			var layer = MeatPuppetManager.Instance.staticLayer;
-			if (CastForObstacle(direction, layer, out var raycastHit)) {
+		//private Vector3 GetVectorToAvoidStaticObstacles(Vector3 moveVector) {
+		//	var direction = parentPuppet.Rigidbody.velocity;
+		//	var layer = MeatPuppetManager.Instance.staticLayer;
+		//	if (CastForObstacle(direction, layer, out var raycastHit)) {
 
-				var perpendicularVector = Quaternion.Euler(0, 90, 0) * moveVector;
-				if (!CastForObstacle(perpendicularVector, layer, out var raycastHitRight, bodyRadiusMod: 1f)) {
+		//		var perpendicularVector = Quaternion.Euler(0, 90, 0) * moveVector;
+		//		if (!CastForObstacle(perpendicularVector, layer, out var raycastHitRight, bodyRadiusMod: 1f)) {
 
-					var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
-					return (moveVector + avoidVector) * 0.5f;
-				} else {
-					perpendicularVector = Quaternion.Euler(0, -90, 0) * moveVector;
-					if (!CastForObstacle(perpendicularVector, layer, out var raycastHitLeft, bodyRadiusMod: 1f)) {
+		//			var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
+		//			return (moveVector + avoidVector) * 0.5f;
+		//		} else {
+		//			perpendicularVector = Quaternion.Euler(0, -90, 0) * moveVector;
+		//			if (!CastForObstacle(perpendicularVector, layer, out var raycastHitLeft, bodyRadiusMod: 1f)) {
 
-						var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
-						return (moveVector + avoidVector) * 0.5f;
-					}
-				}
-			}
+		//				var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
+		//				return (moveVector + avoidVector) * 0.5f;
+		//			}
+		//		}
+		//	}
 
-			return moveVector;
-		}
+		//	return moveVector;
+		//}
 
-		private bool CastForObstacle(Vector3 direction, LayerMask layerMask, out RaycastHit raycastHit, float bodyRadiusMod = 1.5f) {
-			var point1 = parentPuppet.GetPelvisPoint();
-			var point2 = parentPuppet.GetHeadPoint();
-			var radius = parentPuppet.bodyDimensions.bodyRadius * bodyRadiusMod;
-			var distance = parentPuppet.bodyDimensions.bodyHeight * 0.5f;
-			var obstacles = Physics.CapsuleCastAll(point1, point2, radius, direction, distance, layerMask);
+		//private bool CastForObstacle(Vector3 direction, LayerMask layerMask, out RaycastHit raycastHit, float bodyRadiusMod = 1.5f) {
+		//	var point1 = parentPuppet.GetPelvisPoint();
+		//	var point2 = parentPuppet.GetHeadPoint();
+		//	var radius = parentPuppet.bodyDimensions.bodyRadius * bodyRadiusMod;
+		//	var distance = parentPuppet.bodyDimensions.bodyHeight * 0.5f;
+		//	var obstacles = Physics.CapsuleCastAll(point1, point2, radius, direction, distance, layerMask);
 
-			if (obstacles.Length == 0) {
-				raycastHit = new RaycastHit();
-				return false;
-			}
+		//	if (obstacles.Length == 0) {
+		//		raycastHit = new RaycastHit();
+		//		return false;
+		//	}
 
-			float closestCollision = -1f;
-			raycastHit = obstacles[0];
+		//	float closestCollision = -1f;
+		//	raycastHit = obstacles[0];
 
-			foreach (var obstacle in obstacles) {
-				if (obstacle.collider == parentPuppet.Collider) {
-					continue;
-				}
+		//	foreach (var obstacle in obstacles) {
+		//		if (obstacle.collider == parentPuppet.Collider) {
+		//			continue;
+		//		}
 
-				if (!obstacle.collider.gameObject.isStatic) {
-					continue;
-				}
+		//		if (!obstacle.collider.gameObject.isStatic) {
+		//			continue;
+		//		}
 
-				var differenceVector = parentPuppet.transform.position - obstacle.point;
-				if (closestCollision<0 || differenceVector.sqrMagnitude< closestCollision) {
-					raycastHit = obstacle;
-					closestCollision = differenceVector.sqrMagnitude;
-				}
-			}
+		//		var differenceVector = parentPuppet.transform.position - obstacle.point;
+		//		if (closestCollision<0 || differenceVector.sqrMagnitude< closestCollision) {
+		//			raycastHit = obstacle;
+		//			closestCollision = differenceVector.sqrMagnitude;
+		//		}
+		//	}
 
-			return closestCollision >= 0;
-		}
+		//	return closestCollision >= 0;
+		//}
 
 		#endregion
 

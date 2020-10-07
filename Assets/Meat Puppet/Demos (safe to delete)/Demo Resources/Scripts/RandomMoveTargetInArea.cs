@@ -24,7 +24,8 @@ namespace PBG.MeatPuppet {
 		private float time;
 
 		private void Start() {
-			meatPuppet.Movement.MoveTargetTransform = moveTarget;
+			meatPuppet.Movement.SetMoveTarget(moveTarget);
+			//meatPuppet.Movement.MoveTargetTransform = moveTarget;
 
 			moveTarget.position = GetRandomPathablePointInCircle(center.position, radius);
 

@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 namespace PBG.MeatPuppet {
+	/// <summary>
+	/// Used in test scenes to focus the cameras on various targets.
+	/// 
+	/// </summary>
 	public class CycleOrbitalTargets : MonoBehaviour {
 
 		public List<Transform> targets = new List<Transform>();
@@ -40,6 +44,10 @@ namespace PBG.MeatPuppet {
 
 			cameraController.SetParent(newTarget);
 			cameraController.localPosition = Vector3.zero;
+		}
+
+		public void OnGUI() {
+			GUI.Label(new Rect(10, 60, 300, 200), "Press Left Shift to focus on next character");
 		}
 	}
 

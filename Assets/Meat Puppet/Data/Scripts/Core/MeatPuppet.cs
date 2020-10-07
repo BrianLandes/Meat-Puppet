@@ -2,6 +2,14 @@
 using System;
 using UnityEngine;
 namespace PBG.MeatPuppet {
+	/// <summary>
+	/// A movement and animation controller for humanoid characters, particularly NPCs.
+	/// Anticipates and handles common features or requirements of interesting game characters, such as:
+	/// 1. Smooth walking and turning animations.
+	/// 2. Simple movement controls (just give them a destination).
+	/// 3. Navigate over uneven terrain and up/down slopes and stairs.
+	/// 4. Play arbitrary animations such as a melee attack or a conversation loop.
+	/// </summary>
 	[DefaultExecutionOrder(-999)]
 	public class MeatPuppet : MonoBehaviour {
 
@@ -15,13 +23,17 @@ namespace PBG.MeatPuppet {
 		
 		[Tooltip("(Optional) The puppet's initial facing target on start.")]
 		public Transform initialFacingTarget;
-		
+
+		[Tooltip("Affects the puppet's acceleration, velocity, turning, and navigation distances.")]
 		public MovementSettings movementSettings;
 
+		[Tooltip("Affects the 'spring' that acts as the puppet's legs, allowing them to 'hover' over uneven terrain.")]
 		public LegsSettings legsSettings;
 
+		[Tooltip("Affects the how and if the puppet can jump, launching themselves into the air.")]
 		public JumpSettings jumpSettings;
 
+		[Tooltip("Automatically calculated, read-only values that represent the puppet's physical properties.")]
 		public BodyDimensions bodyDimensions;
 
 		#endregion
@@ -30,6 +42,9 @@ namespace PBG.MeatPuppet {
 		
 		public bool Initialized { get; private set; }
 
+		/// <summary>
+		/// Whether the puppet collides with other objects or passes through them.
+		/// </summary>
 		public Tangibility Tangibility {
 			get {
 				if (Collider.enabled && !Collider.isTrigger) {
@@ -49,6 +64,9 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
+		/// <summary>
+		/// Whether the puppet's movement is affected by collisions with other objects.
+		/// </summary>
 		public PhysicalMotionType MotionType {
 			get {
 				if (Rigidbody.isKinematic) {
@@ -71,6 +89,9 @@ namespace PBG.MeatPuppet {
 		
 		#region Public Parts
 
+		/// <summary>
+		/// Hooks into the Unity Animator component, listens for animation events and propogates them to other parts.
+		/// </summary>
 		public MeatPuppetAnimatorHook AnimatorHook { get; private set; }
 
 		/// <summary>
@@ -78,16 +99,36 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		public Collider Collider { get; private set; }
 
+		/// <summary>
+		/// The main rigidbody for the puppet.
+		/// </summary>
 		public Rigidbody Rigidbody { get; private set; }
 
+		/// <summary>
+		/// Takes in a move target and/or a facing target and controls the puppet's acceleration and velocity,
+		/// pathfinding and navigating them towards those positions using dynamic physics.
+		/// </summary>
 		public MeatPuppetMovement Movement { get; private set; }
 
+		/// <summary>
+		/// Measures the puppet's movement and sets important animator values on the puppet's Animator Controller.
+		/// </summary>
 		public MeatPuppetLocomotion Locomotion { get; private set; }
 
+		/// <summary>
+		/// Allows the puppet to 'jump'. (Currently only works with the Player Controller.)
+		/// </summary>
 		public MeatPuppetJump Jump { get; private set; }
 
+		/// <summary>
+		/// An invisible 'spring' that keeps the puppet's capsule body a certain distance above the ground.
+		/// Also manages whether the puppet is 'grounded' (whether or not the puppet is currently standing on solid ground).
+		/// </summary>
 		public MeatPuppetLegs Legs { get; private set; }
 		
+		/// <summary>
+		/// Allows other scripts and systems to cause the puppet to play arbitrary animations; either looping animations or 'one-shot' animations.
+		/// </summary>
 		public MeatPuppetAnimation Animation { get; private set; }
 		
 
@@ -97,9 +138,10 @@ namespace PBG.MeatPuppet {
 
 		public void Start() {
 			GrowParts();
-
-			Movement.MoveTargetTransform = initialMoveTarget;
-			Movement.FacingTargetTransform = initialFacingTarget;
+			Movement.SetMoveTarget(initialMoveTarget);
+			Movement.SetFacingTarget(initialFacingTarget);
+			//Movement.MoveTargetTransform = initialMoveTarget;
+			//Movement.FacingTargetTransform = initialFacingTarget;
 		}
 
 		public void OnEnable() {
@@ -124,16 +166,10 @@ namespace PBG.MeatPuppet {
 		}
 #endif
 		#endregion
-
-		#region Public Methods
-
-
-		#endregion
-
+		
 
 		#region Body Positions
-
-
+		
 		public Vector3 GetPelvisPoint() {
 			// TODO: assumes that the puppet is standing
 			return transform.position + Vector3.up * bodyDimensions.legLength;
@@ -227,18 +263,29 @@ namespace PBG.MeatPuppet {
 
 	#region Classes and Enums
 	
+	/// <summary>
+	/// Read-only values representing the puppet's physical properties, such
+	/// as height, width, and density.
+	/// </summary>
 	[Serializable]
 	public class BodyDimensions {
+		[Tooltip("Whether or not to calculate and set the puppet's body dimensions on start.")]
 		public bool autoConfigure = true;
 
-		[NonSerialized] public float torsoBodyRatio = 0.7f;
+		[Header("Auto-configure settings")]
+		[Tooltip("The ratio of the puppet's height to use for the body. (The remainder of the height will be the length of the legs.)")]
+		public float torsoBodyRatio = 0.7f;
 
-		[NonSerialized] public float density = 10f;
+		[Tooltip("The puppet's density. Used to set the mass on the rigidbody after calculating volume of body.")]
+		public float density = 10f;
 
-		[NonSerialized] public float legLength;
-
-		[NonSerialized] public float bodyRadius;
-		[NonSerialized] public float bodyHeight;
+		[Header("Advanced (Set on Auto-configure)")]
+		[Tooltip("The length of the puppet's 'legs'.")]
+		public float legLength;
+		[Tooltip("The radius of the puppet's 'body'.")]
+		public float bodyRadius;
+		[Tooltip("The height of the puppet's 'body'.")]
+		public float bodyHeight;
 
 	}
 

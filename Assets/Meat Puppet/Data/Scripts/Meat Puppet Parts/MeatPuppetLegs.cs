@@ -19,9 +19,7 @@ namespace PBG.MeatPuppet {
 	}
 
 	public class MeatPuppetLegs {
-
-		// TODO: slope affects movement speed
-		// TODO: support ground rotating on axii other than y
+		
 		// TODO: apply force to ground if dynamic
 
 		private float lastDisplacement = 0;
@@ -56,14 +54,12 @@ namespace PBG.MeatPuppet {
 		public bool IsGrounded { get; private set; }
 		
 		private Vector3 GetDirection() {
-			// TODO: allow for it to work in any orientation
 			return Vector3.down;
 		}
 		
 		public void Update() {
 			switch( mode ) {
 				case Mode.Normal:
-				// case Mode.NormalUngrounded:
 					UpdateNormal();
 					break;
 				case Mode.Jumping:
@@ -84,18 +80,11 @@ namespace PBG.MeatPuppet {
 			
 			var distance = parentPuppet.bodyDimensions.legLength * 1.66f;
 
-			if (CastForGround(distance, out var raycastHit)) {
-
-				var autoOffset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
-
-				float targetPosition = autoOffset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
-				float displacement = raycastHit.point.y- targetPosition;
+			if (CastForGround(distance, out var distanceToGround, out var raycastHit)) {
+				
+				float displacement = distanceToGround;
 				var direction = GetDirection();
 				
-				if ( raycastHit.point == Vector3.zero) {
-					displacement = parentPuppet.bodyDimensions.legLength;
-				}
-
 				var strength = parentPuppet.legsSettings.strength;
 				parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength), ForceMode.Acceleration);
 
@@ -175,25 +164,24 @@ namespace PBG.MeatPuppet {
 			
 			// check for ground within leg distance
 			var distance = parentPuppet.bodyDimensions.legLength;
-			if (CastForGround(distance, out var raycastHit)) {
+			if (CastForGround(distance, out var distanceToGround, out var raycastHit)) {
 				// if there IS ground -> switch back to normal mode
 				mode = Mode.Normal;
 				UpdateGrounded( true );
 			}
 		}
 
-		private bool CastForGround(float distance, out RaycastHit raycastHit) {
+		private bool CastForGround(float distanceToCast, out float distanceToGround, out RaycastHit raycastHit ) {
 
 			var origin = parentPuppet.GetPelvisPoint();
 			var radius = parentPuppet.bodyDimensions.bodyRadius * 0.25f;
 			var direction = GetDirection();
 			var groundLayer = MeatPuppetManager.Instance.groundLayer;
 
-			var hits = Physics.SphereCastAll(origin, radius, direction, distance, groundLayer);
+			var hits = Physics.SphereCastAll(origin, radius, direction, distanceToCast, groundLayer);
 
 			float closestHitDistance = -1;
 			raycastHit = new RaycastHit();
-
 			
 			foreach( var hit in hits ) {
 				// ignore collisions with the puppet's own collider
@@ -217,11 +205,22 @@ namespace PBG.MeatPuppet {
 
 			}
 
+			var autoOffset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
+			float targetPosition = autoOffset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
+			float groundPoint = raycastHit.point.y;
+			// sometimes the collision result will return Vector3.zero, which does us no good
+			if (raycastHit.point == Vector3.zero) {
+				groundPoint = origin.y;
+			}
+
+			distanceToGround = groundPoint - targetPosition;
+
+			
+			
 			return closestHitDistance >= 0;
 		}
 		
 		private void InheritVelocityFromGround(Vector3 groundCenterOfMass, Vector3 groundVelocity, Vector3 groundAngularVelocity) {
-			// TODO: support angular velocity on axii other than y
 
 			parentPuppet.Rigidbody.position += groundVelocity * Time.deltaTime;
 

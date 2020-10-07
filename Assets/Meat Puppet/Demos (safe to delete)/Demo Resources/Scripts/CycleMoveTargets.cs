@@ -15,7 +15,8 @@ namespace PBG.MeatPuppet {
 		public float waitTime = 6f;
 
 		private void Start() {
-			meatPuppet.Movement.MoveTargetTransform = moveTarget;
+			meatPuppet.Movement.SetMoveTarget(moveTarget);
+			//meatPuppet.Movement.MoveTargetTransform = moveTarget;
 
 			if (moveTarget!=null && targets.Count > 0) {
 				StartCoroutine(CycleTargets());

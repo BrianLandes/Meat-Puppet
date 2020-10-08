@@ -906,15 +906,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -922,6 +923,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -1451,6 +1453,7 @@ MonoBehaviour:
     applyRootMotion: 1
     makeIntangible: 0
     makeKinematic: 1
+    overrideLegs: 1
 --- !u!65 &295064070
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2097,15 +2100,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -2113,6 +2117,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -2221,15 +2226,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -2237,6 +2243,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -2498,8 +2505,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.30904752, y: -0.07612444, z: 0.024825167, w: 0.94767004}
-  m_LocalPosition: {x: 10.981319, y: 2.438041, z: -5.319417}
+  m_LocalRotation: {x: 0.26885164, y: -0.079068065, z: 0.022150805, w: 0.9596752}
+  m_LocalPosition: {x: 11.054514, y: 2.4130177, z: -5.706271}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2881,15 +2888,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -2897,6 +2905,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -3608,6 +3617,18 @@ PrefabInstance:
     - target: {fileID: 400006, guid: 58039f6b607f6c64cb097be6ac51def0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 58039f6b607f6c64cb097be6ac51def0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 58039f6b607f6c64cb097be6ac51def0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400006, guid: 58039f6b607f6c64cb097be6ac51def0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9500000, guid: 58039f6b607f6c64cb097be6ac51def0, type: 3}
       propertyPath: m_Controller
@@ -4897,15 +4918,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -4913,6 +4935,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -4931,6 +4954,7 @@ MonoBehaviour:
   faceForward: 1
   horizontalAxisName: Horizontal
   verticalAxisName: Vertical
+  sprintInputName: Fire3
 --- !u!1 &1115573080
 GameObject:
   m_ObjectHideFlags: 0
@@ -7854,15 +7878,16 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
+    stoppingDistance: 0.7
     moveAcceleration: 4
+    disableMovementWhenUngrounded: 0
+    brakeFactor: 8
     turnForce: 2
-    preciseTurnForce: 100
+    turnDampening: 80
     navAgentAllowedDistance: 0.2
-    facingTolerance: 0.1
-    avoidanceForce: 4
   legsSettings:
-    strength: 80
-    damping: 500
+    offset: 0
+    slopeSpeedModifier: 1.8
     inheritGroundsVelocity: 1
   jumpSettings:
     enableJump: 1
@@ -7870,6 +7895,7 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
+    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0

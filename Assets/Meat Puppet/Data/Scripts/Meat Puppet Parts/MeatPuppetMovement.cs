@@ -182,6 +182,11 @@ namespace PBG.MeatPuppet {
 			return IsDistanceToTargetLessThan(parentPuppet.movementSettings.stoppingDistance);
 		}
 
+		public void Teleport(Vector3 worldPosition ) {
+			parentPuppet.transform.position = worldPosition;
+			parentPuppet.Locomotion.Reset();
+		}
+
 		#endregion
 
 		#region Facing Target
@@ -310,7 +315,7 @@ namespace PBG.MeatPuppet {
 				var moveVector = GetMoveVector();
 
 				// otherwise, turn to face the direction we're moving
-				if (moveVector.sqrMagnitude > 0.01f) {
+				if (moveVector.sqrMagnitude > 0.6f) {
 
 					Vector3 angleVector = moveVector;
 
@@ -505,7 +510,7 @@ namespace PBG.MeatPuppet {
 
 			// modify the speed
 			// idealVelocity *= parentPuppet.movementSettings.moveSpeedModifier;
-			idealVelocity *= Mathf.Min( parentPuppet.Legs.GetSlopeSpeedModifier(), parentPuppet.Locomotion.GetSlopeSpeedModifier());
+			idealVelocity *= parentPuppet.Locomotion.GetSlopeSpeedModifier();
 
 			var currentVelocity = parentPuppet.Rigidbody.velocity.DropY();
 

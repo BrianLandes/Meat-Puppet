@@ -11,6 +11,10 @@ namespace PBG.MeatPuppet {
 
 		[NonSerialized] public float damping = 160f;
 
+		[NonSerialized] public float airborneStrength = 250f;
+
+		[NonSerialized] public float airborneDamping = 1660f;
+
 		public float offset = 0f;
 
 		public float slopeSpeedModifier = 1.8f;
@@ -19,15 +23,16 @@ namespace PBG.MeatPuppet {
 	}
 
 	public class MeatPuppetLegs {
-		
+
 		// TODO: apply force to ground if dynamic
+		
 
 		private float lastDisplacement = 0;
 
 		private MeatPuppet parentPuppet;
 
-		private float slopeSpeedModifier = 1f;
-
+		//private float slopeSpeedModifier = 1f;
+		
 		enum Mode {
 			Normal,
 			Jumping,
@@ -42,10 +47,17 @@ namespace PBG.MeatPuppet {
 		private float minJumpTime = 0.1f;
 		private float minJumpTimer = 0.0f;
 
-		private float ungroundedDelay = 0.3f;
+		private float ungroundedDelay = 0.1f;
 		private float ungroundedDelayTimer = 0.0f;
 
+		private bool useAirborneStrength = false;
+		private float airborneStrengthTime = 0.2f;
+		private float airborneStrengthTimer = 0.0f;
+
+		//private bool needsGroundPenetrationCorrection = false;
 		//private float lastOffset = 0.0f;
+
+		//private float lastGroundPenetration;
 
 		public MeatPuppetLegs(MeatPuppet parent) {
 			parentPuppet = parent;
@@ -70,7 +82,7 @@ namespace PBG.MeatPuppet {
 			}
 			
 		}
-
+		
 		/// <summary>
 		/// During Normal Mode, the legs will look for ground beneath the puppet and apply force (usually upwards)
 		/// to keep the puppet a certain distance above the ground.
@@ -80,12 +92,20 @@ namespace PBG.MeatPuppet {
 			
 			var distance = parentPuppet.bodyDimensions.legLength * 1.66f;
 
-			if (CastForGround(distance, out var distanceToGround, out var raycastHit)) {
+			if (CastForGround(distance, out var results, out var raycastHit)) {
 				
-				float displacement = distanceToGround;
+				var displacement = results.distanceToGround;
 				var direction = GetDirection();
 				
 				var strength = parentPuppet.legsSettings.strength;
+				var damping = parentPuppet.legsSettings.damping;
+				
+				if (useAirborneStrength) {
+					airborneStrengthTimer -= Time.deltaTime;
+					useAirborneStrength = airborneStrengthTimer > 0f;
+					strength = parentPuppet.legsSettings.airborneStrength;
+					damping = parentPuppet.legsSettings.airborneDamping;
+				}
 				parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength), ForceMode.Acceleration);
 
 				//Debug.DrawRay(parentPuppet.transform.position + Vector3.right, -GetDirection() * displacement * strength * 0.01f);
@@ -93,7 +113,6 @@ namespace PBG.MeatPuppet {
 				//apply a damping force, proportional to the velocity
 				float changeInDisplacement = displacement - lastDisplacement;
 
-				var damping = parentPuppet.legsSettings.damping;
 				parentPuppet.Rigidbody.AddForce(-direction * (changeInDisplacement * damping), ForceMode.Acceleration);
 				//Debug.DrawRay(parentPuppet.transform.position + Vector3.forward, -direction * changeInDisplacement * strength * 0.01f, Color.yellow);
 
@@ -139,7 +158,7 @@ namespace PBG.MeatPuppet {
 			else {
 				lastDisplacement = 0;
 
-				slopeSpeedModifier = 1f;
+				//slopeSpeedModifier = 1f;
 
 				UpdateGrounded(false);
 			}
@@ -151,8 +170,7 @@ namespace PBG.MeatPuppet {
 		private void UpdateJump() {
 			// Remain in Jump mode until a variety of conditions are met
 			//UpdateGrounded(false);
-			slopeSpeedModifier = 1f;
-
+			//slopeSpeedModifier = 1f;
 			// stay in jump mode for a minimum amount of time
 			if (minJumpTimer > 0) {
 				minJumpTimer -= Time.deltaTime;
@@ -170,7 +188,7 @@ namespace PBG.MeatPuppet {
 			parentPuppet.AnimatorHook.Animator.SetFloat("Land Force", landForce);
 
 			// check for ground within leg distance
-			var distance = parentPuppet.bodyDimensions.legLength;
+			var distance = parentPuppet.bodyDimensions.legLength - parentPuppet.bodyDimensions.bodyRadius * 0.25f;
 			if (CastForGround(distance, out var distanceToGround, out var raycastHit)) {
 				// if there IS ground -> switch back to normal mode
 				mode = Mode.Normal;
@@ -181,7 +199,9 @@ namespace PBG.MeatPuppet {
 			}
 		}
 
-		private bool CastForGround(float distanceToCast, out float distanceToGround, out RaycastHit raycastHit ) {
+		private bool CastForGround(float distanceToCast, out CastResults results, out RaycastHit raycastHit ) {
+
+			results = new CastResults();
 
 			var origin = parentPuppet.GetPelvisPoint();
 			var radius = parentPuppet.bodyDimensions.bodyRadius * 0.25f;
@@ -215,19 +235,30 @@ namespace PBG.MeatPuppet {
 
 			}
 
-			var autoOffset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
-			float targetPosition = autoOffset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
+			results.offset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
+
+			if (useAirborneStrength) {
+				results.offset = (Physics.gravity.y) / parentPuppet.legsSettings.airborneStrength;
+			}
+
+			float targetPosition = results.offset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
 			float groundPoint = raycastHit.point.y;
 			// sometimes the collision result will return Vector3.zero, which does us no good
 			if (raycastHit.point == Vector3.zero) {
 				groundPoint = origin.y;
 			}
 
-			distanceToGround = groundPoint - targetPosition;
+			results.distanceToGround = groundPoint - targetPosition;
 
-			
-			
+			//results.groundPenetration = Mathf.Max(0f, groundPoint - parentPuppet.transform.position.y);
+
 			return closestHitDistance >= 0;
+		}
+
+		private struct CastResults {
+			public float distanceToGround;
+			public float offset;
+			//public float groundPenetration;
 		}
 		
 		private void InheritVelocityFromGround(Vector3 groundCenterOfMass, Vector3 groundVelocity, Vector3 groundAngularVelocity) {
@@ -266,11 +297,16 @@ namespace PBG.MeatPuppet {
 			}
 
 			parentPuppet.AnimatorHook.Animator.SetBool("Grounded", IsGrounded);
+
+			if ( !IsGrounded) {
+				airborneStrengthTimer = airborneStrengthTime;
+				useAirborneStrength = true;
+			}
 		}
 
-		public float GetSlopeSpeedModifier() {
-			return slopeSpeedModifier;
-		}
+		//public float GetSlopeSpeedModifier() {
+		//	return slopeSpeedModifier;
+		//}
 
 		public void StartJumpMode() {
 			mode = Mode.Jumping;

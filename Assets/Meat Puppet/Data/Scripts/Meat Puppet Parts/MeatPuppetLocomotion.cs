@@ -88,7 +88,7 @@ namespace PBG.MeatPuppet {
 
 			float groundSteep = CalculateGroundSteep();
 			// if groundSteep > 0 -> reduce speedModifer from 1f -> 0f
-			slopeSpeedModifier = 1f - Mathf.Max(0f, groundSteep*0.5f);
+			//slopeSpeedModifier = 1f - Mathf.Max(0f, groundSteep*0.5f);
 
 			parentPuppet.AnimatorHook.Animator.SetFloat(groundSteepKey, groundSteep, turnSpeedSmoothing, Time.deltaTime);
 		}

@@ -142,6 +142,8 @@ namespace PBG.MeatPuppet {
 			Movement.SetFacingTarget(initialFacingTarget);
 			//Movement.MoveTargetTransform = initialMoveTarget;
 			//Movement.FacingTargetTransform = initialFacingTarget;
+
+
 		}
 
 		public void OnEnable() {
@@ -150,6 +152,7 @@ namespace PBG.MeatPuppet {
 
 		private void LateUpdate() {
 			Locomotion.Update();
+			
 		}
 
 		private void FixedUpdate() {

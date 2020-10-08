@@ -148,7 +148,10 @@ namespace PBG.MeatPuppet {
 #if UNITY_EDITOR
 
 		private void OnValidate() {
-			Reposition();
+			if (gameObject.activeInHierarchy && enabled ) {
+				Reposition();
+
+			}
 
 		}
 #endif

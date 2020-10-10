@@ -280,7 +280,7 @@ namespace PBG.MeatPuppet {
 		public float torsoBodyRatio = 0.7f;
 
 		[Tooltip("The puppet's density. Used to set the mass on the rigidbody after calculating volume of body.")]
-		public float density = 10f;
+		[NonSerialized] public float density = 20f;
 
 		[Header("Advanced (Set on Auto-configure)")]
 		[Tooltip("The length of the puppet's 'legs'.")]

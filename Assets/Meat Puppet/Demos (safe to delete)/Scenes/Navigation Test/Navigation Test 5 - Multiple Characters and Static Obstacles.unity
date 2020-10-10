@@ -175,9 +175,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -191,7 +190,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -3747,9 +3745,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -3763,7 +3760,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -4009,9 +4005,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -4025,7 +4020,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -4617,9 +4611,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -4633,7 +4626,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -6508,9 +6500,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -6524,7 +6515,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0
@@ -6824,9 +6814,8 @@ MonoBehaviour:
   movementSettings:
     walkSpeed: 4
     runSpeed: 6
-    stoppingDistance: 0.7
     moveAcceleration: 4
-    brakeFactor: 8
+    disableMovementWhenUngrounded: 0
     turnForce: 1.5
     turnDampening: 80
     navAgentAllowedDistance: 0.4
@@ -6840,7 +6829,6 @@ MonoBehaviour:
   bodyDimensions:
     autoConfigure: 1
     torsoBodyRatio: 0.7
-    density: 10
     legLength: 0
     bodyRadius: 0
     bodyHeight: 0

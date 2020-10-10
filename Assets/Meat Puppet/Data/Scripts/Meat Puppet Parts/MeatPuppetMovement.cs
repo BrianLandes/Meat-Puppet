@@ -20,7 +20,7 @@ namespace PBG.MeatPuppet {
 		public float runSpeed = 6f;
 
 		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
-		public float stoppingDistance = 0.7f;
+		[NonSerialized] public float stoppingDistance = 0.7f;
 		
 		//[NonSerialized] public bool avoidStaticObstacles = false; // experimental feature, not ready
 
@@ -32,7 +32,7 @@ namespace PBG.MeatPuppet {
 		public bool disableMovementWhenUngrounded = false;
 
 		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
-		public float brakeFactor = 8f;
+		[NonSerialized] public float brakeFactor = 1f;
 
 		[Tooltip("The amount of angular force applied to turn the puppet.")]
 		public float turnForce = 1.5f;
@@ -72,6 +72,8 @@ namespace PBG.MeatPuppet {
 
 		private MeatPuppet parentPuppet;
 
+		private float minStoppingDistance = 0.6f;
+
 		#region Private Data Structures
 
 		enum InputType {
@@ -99,7 +101,7 @@ namespace PBG.MeatPuppet {
 		private Vector3 facingTargetPoint;
 		private Vector3 facingTargetDirection;
 
-
+		private Vector3 lastMovementForce;
 		private float lastTurnDifference;
 
 		#endregion
@@ -157,7 +159,13 @@ namespace PBG.MeatPuppet {
 				case InputType.Transform:
 					var currentPosition = transform.position;
 					var targetPosition = GetMoveTargetPoint();
-					return MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(currentPosition, targetPosition, value);
+
+					// treat the y-axis separate; allow a bit more leanency
+					float y = currentPosition.y - currentPosition.y;
+					if (Mathf.Abs(y) > 0.3f) {
+						return false;
+					}
+					return MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(currentPosition.JustXZ(), targetPosition.JustXZ(), value);
 
 				default:
 				case InputType.Direction:
@@ -179,7 +187,8 @@ namespace PBG.MeatPuppet {
 		}
 
 		public bool ReachedTarget() {
-			return IsDistanceToTargetLessThan(parentPuppet.movementSettings.stoppingDistance);
+			var distance = Mathf.Max(0.01f, parentPuppet.movementSettings.stoppingDistance);
+			return IsDistanceToTargetLessThan(distance);
 		}
 
 		public void Teleport(Vector3 worldPosition ) {
@@ -231,13 +240,19 @@ namespace PBG.MeatPuppet {
 
 			if (!parentPuppet.movementSettings.disableMovementWhenUngrounded || parentPuppet.Legs.IsGrounded) {
 				// if we have a target and we're close to that target and we want to be ~exactly on top of that target -> use 'fake' movement
-				if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= 0.02f && IsDistanceToTargetLessThan(1f) ) {
+				if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= minStoppingDistance && IsDistanceToTargetLessThan(1f)) {
 					// 'fake' the movement in order to get us exactly to that position
 					UpdatePositionUsingPreciseMovement();
 				}
 				else {
-					UpdatePosition();
+					//	//UpdatePosition();
+					var moveVector = GetMoveVector();
+
+				MoveInDirection(moveVector);
 				}
+			}
+			else {
+				lastMovementForce = Vector3.zero;
 			}
 
 			UpdateRotation();
@@ -248,46 +263,46 @@ namespace PBG.MeatPuppet {
 
 		#region Private Methods
 
-		private void UpdatePosition() {
+		//private void UpdatePosition() {
 
-			if (!HasMoveTarget() || ReachedTarget()) {
-				// If we're within stopping distance of the target -> bring the unit to a stop
-				ApplyBrakeForce();
+		//	//if (!HasMoveTarget() || ReachedTarget()) {
+		//	//	// If we're within stopping distance of the target -> bring the unit to a stop
+		//	//	ApplyBrakeForce();
 
-				//if (avoidOtherCharacters) {
-				//	var avoidVector = ModifyMoveVectorForAvoidance(Vector3.zero);
-				//	if (avoidVector.sqrMagnitude > 0.01f) {
-				//		MoveInDirection(avoidVector);
+		//	//	//if (avoidOtherCharacters) {
+		//	//	//	var avoidVector = ModifyMoveVectorForAvoidance(Vector3.zero);
+		//	//	//	if (avoidVector.sqrMagnitude > 0.01f) {
+		//	//	//		MoveInDirection(avoidVector);
 
-				//	}
-				//}
+		//	//	//	}
+		//	//	//}
 
-				return;
-			}
+		//	//	return;
+		//	//}
 
-			// calculate the direction to move towards the target
-			var moveVector = GetMoveVector();
+		//	// calculate the direction to move towards the target
+		//	var moveVector = GetMoveVector();
 
-			//if (avoidOtherCharacters) {
-			//	moveVector = ModifyMoveVectorForAvoidance(moveVector);
-			//}
+		//	//if (avoidOtherCharacters) {
+		//	//	moveVector = ModifyMoveVectorForAvoidance(moveVector);
+		//	//}
 
-			//if (parentPuppet.movementSettings.avoidStaticObstacles) {
-			//	moveVector = GetVectorToAvoidStaticObstacles(moveVector);
-			//}
+		//	//if (parentPuppet.movementSettings.avoidStaticObstacles) {
+		//	//	moveVector = GetVectorToAvoidStaticObstacles(moveVector);
+		//	//}
 
-			// As long as the direction isn't zero -> apply some force in that direction
-			if (moveVector.sqrMagnitude > 0.01f) {
-				MoveInDirection(moveVector);
+		//	// As long as the direction isn't zero -> apply some force in that direction
+		//	//if (moveVector.sqrMagnitude > 0.01f) {
+		//		MoveInDirection(moveVector);
 
-			}
-			// if the move Vector is zero -> bring the unit to a stop
-			else {
-				ApplyBrakeForce();
-			}
+		//	//}
+		//	// if the move Vector is zero -> bring the unit to a stop
+		//	//else {
+		//		//ApplyBrakeForce();
+		//	//}
 
 
-		}
+		//}
 
 		/// <summary>
 		/// If the stopping distance is ~0 and the puppet is almost in position, ignore acceleration and velocity and
@@ -296,6 +311,7 @@ namespace PBG.MeatPuppet {
 		private void UpdatePositionUsingPreciseMovement() {
 			var moveVector = GetMoveVector();
 			var velocity = moveVector * GetTopSpeed() * 0.6f;
+			velocity.y = parentPuppet.Rigidbody.velocity.y;
 			parentPuppet.Rigidbody.velocity = velocity;
 		}
 
@@ -445,7 +461,7 @@ namespace PBG.MeatPuppet {
 		/// Calculates and returns the unit vector that this puppet should go in order to grow closer to the target
 		/// </summary>
 		private Vector3 GetMoveVector() {
-			if (!hasMoveTarget) {
+			if (!HasMoveTarget() || ReachedTarget()) {
 				return Vector3.zero;
 			}
 
@@ -523,8 +539,15 @@ namespace PBG.MeatPuppet {
 			// if the unit is going in the wrong direction.
 			var idealDifference = idealVelocity - currentVelocity;
 			idealDifference.y = 0;
+			var movementForce = idealDifference * parentPuppet.movementSettings.moveAcceleration;
 			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.moveAcceleration, ForceMode.Acceleration);
 
+			var movementForceDifference = movementForce - lastMovementForce;
+			//var idealDifference = -parentPuppet.Rigidbody.velocity;
+			movementForceDifference.y = 0;
+			parentPuppet.Rigidbody.AddForce(-movementForceDifference * parentPuppet.movementSettings.brakeFactor, ForceMode.Acceleration);
+
+			lastMovementForce = movementForce;
 		}
 
 		/// <summary>

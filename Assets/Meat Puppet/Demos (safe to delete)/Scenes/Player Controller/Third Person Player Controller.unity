@@ -2229,7 +2229,7 @@ MonoBehaviour:
     stoppingDistance: 0.7
     moveAcceleration: 4
     disableMovementWhenUngrounded: 0
-    brakeFactor: 8
+    brakeFactor: 1
     turnForce: 2
     turnDampening: 80
     navAgentAllowedDistance: 0.2
@@ -2505,8 +2505,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.26885164, y: -0.079068065, z: 0.022150805, w: 0.9596752}
-  m_LocalPosition: {x: 11.054514, y: 2.4130177, z: -5.706271}
+  m_LocalRotation: {x: 0.2688493, y: -0.079068236, z: 0.022150647, w: 0.95967585}
+  m_LocalPosition: {x: 11.054519, y: 2.413016, z: -5.706296}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

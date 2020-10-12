@@ -7,6 +7,9 @@ namespace PBG.MeatPuppet {
 
 		public float minDeltaTime = 0.1f;
 
+		public Vector3 velocity;
+		public Vector3 acceleration;
+
 		float lastTime;
 		private Vector3 lastPosition;
 
@@ -26,7 +29,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		public Vector3 GetVelocity() {
-			return lastVelocity;
+			return velocity;
 		}
 
 		public Vector3 GetAngularVelocity() {
@@ -43,11 +46,13 @@ namespace PBG.MeatPuppet {
 			if (timeDelta < minDeltaTime) {
 				return;
 			}
-
-			lastVelocity = (transform.position - lastPosition) / timeDelta;
+			lastVelocity = velocity;
+			velocity = (transform.position - lastPosition) / timeDelta;
 
 			lastPosition = transform.position;
 			lastTime = Time.time;
+
+			acceleration = velocity - lastVelocity;
 
 			var rotationDifference = transform.rotation * Quaternion.Inverse(lastRotation);
 			float angleInDegrees;

@@ -105,6 +105,11 @@ namespace PBG.MeatPuppet {
 		public Rigidbody Rigidbody { get; private set; }
 
 		/// <summary>
+		/// 
+		/// </summary>
+		public ColliderVelocity ColliderVelocity { get; private set; }
+
+		/// <summary>
 		/// Takes in a move target and/or a facing target and controls the puppet's acceleration and velocity,
 		/// pathfinding and navigating them towards those positions using dynamic physics.
 		/// </summary>
@@ -213,6 +218,8 @@ namespace PBG.MeatPuppet {
 			Jump = new MeatPuppetJump(this);
 			
 			Animation = new MeatPuppetAnimation(this);
+
+			ColliderVelocity = gameObject.AddComponent<ColliderVelocity>();
 
 			Initialized = true;
 		}

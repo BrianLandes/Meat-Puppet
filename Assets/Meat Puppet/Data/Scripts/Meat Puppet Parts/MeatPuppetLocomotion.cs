@@ -33,6 +33,8 @@ namespace PBG.MeatPuppet {
 
 		private float slopeSpeedModifier = 1f;
 
+		float acceleration = 0f;
+
 		private readonly int forwardSpeedKey;
 		private readonly int horizontalSpeedKey;
 		private readonly int turnSpeedKey;
@@ -91,6 +93,8 @@ namespace PBG.MeatPuppet {
 			//slopeSpeedModifier = 1f - Mathf.Max(0f, groundSteep*0.5f);
 
 			parentPuppet.AnimatorHook.Animator.SetFloat(groundSteepKey, groundSteep, turnSpeedSmoothing, Time.deltaTime);
+
+			//parentPuppet.AnimatorHook.Animator.SetFloat("Acceleration", acceleration);
 		}
 
 		private void UpdateRelativeSpeeds() {
@@ -102,9 +106,14 @@ namespace PBG.MeatPuppet {
 
 			var velocity = (parentPuppet.transform.position - lastPosition) / timeDelta;
 			velocity -= ignoreVelocity;
+
+			acceleration = velocity.magnitude - lastVelocity.magnitude;
+
 			// lastVelocity = Vector3.Lerp(lastVelocity, velocity, velocitySmoothing * timeDelta);
 			lastVelocity = (lastVelocity + velocity) * 0.5f;
 			// lastVelocity = velocity;
+
+			
 
 			lastPosition = parentPuppet.transform.position;
 

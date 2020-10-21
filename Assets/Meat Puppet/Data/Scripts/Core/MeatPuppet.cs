@@ -262,7 +262,7 @@ namespace PBG.MeatPuppet {
 			Rigidbody.drag = 1;
 			Rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 		}
-
+		
 		private void ApplyJumpForce() {
 			Jump.ApplyJumpForce();
 		}

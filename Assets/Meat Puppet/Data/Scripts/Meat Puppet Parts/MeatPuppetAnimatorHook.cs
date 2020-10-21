@@ -19,7 +19,10 @@ namespace PBG.MeatPuppet {
 		/// </summary>
 		public Action<AnimatorStateInfo, int> onStateChange;
 
-		//private int lastState;
+		/// <summary>
+		/// Events to call through from OnAnimatorMove().
+		/// </summary>
+		public Action onAnimatorIK;
 
 		private Animator animator;
 
@@ -81,6 +84,10 @@ namespace PBG.MeatPuppet {
 			onAnimatorMove?.Invoke();
 		}
 
+		void OnAnimatorIK() {
+			onAnimatorIK?.Invoke();
+		}
+
 		private void InitializeAnimatorMaybe() {
 			// TODO: initialize this better
 
@@ -96,6 +103,7 @@ namespace PBG.MeatPuppet {
 
 			// TODO: allow auto-assign to be false, and assign animator controller to be called from outside (ie: when using UMA)
 			AssignAnimationController();
+			
 
 			initializedAnimator = true;
 

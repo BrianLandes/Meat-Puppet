@@ -14,6 +14,7 @@ namespace PBG.MeatPuppet {
 		public LayerMask staticLayer;
 
 		public PhysicMaterial characterPhysicMaterial;
+		
 
 		//public AnimationCurve forwardSpeedCurve;
 		

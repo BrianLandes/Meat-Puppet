@@ -50,12 +50,12 @@ namespace PBG.MeatPuppet {
 			parentPuppet.AnimatorHook.Animator.SetTrigger("Jump");
 
 			// allow the animation to play for a short time before applying force
-			parentPuppet.Invoke("ApplyJumpForce", parentPuppet.jumpSettings.jumpDelay);
+			parentPuppet.Invoke("ApplyJumpForce", parentPuppet.configuration.jumpDelay);
 			invokingForce = true;
 
-			if (parentPuppet.jumpSettings.useJumpBoost) {
+			if (parentPuppet.configuration.useJumpBoost) {
 				// allow the jump to be boosted for a short amount of time
-				boostTimer = parentPuppet.jumpSettings.jumpBoostTime;
+				boostTimer = parentPuppet.configuration.jumpBoostTime;
 			}
 			
 			// parentPuppet.Legs.StartNormalUngroundedMode();
@@ -68,7 +68,7 @@ namespace PBG.MeatPuppet {
 
 			// apply an immediate velocity to the body
 			var velocity = parentPuppet.Rigidbody.velocity;
-			velocity.y = parentPuppet.jumpSettings.initialJumpForce;
+			velocity.y = parentPuppet.configuration.initialJumpForce;
 			parentPuppet.Rigidbody.velocity = velocity;
 
 			parentPuppet.Legs.StartJumpMode();
@@ -84,7 +84,7 @@ namespace PBG.MeatPuppet {
 		public void Update() {
 			if ( boostTimer > 0 && !invokingForce) {
 				boostTimer -= Time.fixedDeltaTime;
-				parentPuppet.Rigidbody.AddForce(Vector3.up * parentPuppet.jumpSettings.boostForce, ForceMode.Force);
+				parentPuppet.Rigidbody.AddForce(Vector3.up * parentPuppet.configuration.boostForce, ForceMode.Force);
 			}
 		}
 

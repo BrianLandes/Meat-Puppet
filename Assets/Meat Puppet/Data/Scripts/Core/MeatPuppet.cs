@@ -24,14 +24,16 @@ namespace PBG.MeatPuppet {
 		[Tooltip("(Optional) The puppet's initial facing target on start.")]
 		public Transform initialFacingTarget;
 
-		[Tooltip("Affects the puppet's acceleration, velocity, turning, and navigation distances.")]
-		public MovementSettings movementSettings;
+		public MeatPuppetConfiguration configuration;
 
-		[Tooltip("Affects the 'spring' that acts as the puppet's legs, allowing them to 'hover' over uneven terrain.")]
-		public LegsSettings legsSettings;
+		//[Tooltip("Affects the puppet's acceleration, velocity, turning, and navigation distances.")]
+		//public MovementSettings movementSettings;
 
-		[Tooltip("Affects the how and if the puppet can jump, launching themselves into the air.")]
-		public JumpSettings jumpSettings;
+		//[Tooltip("Affects the 'spring' that acts as the puppet's legs, allowing them to 'hover' over uneven terrain.")]
+		//public LegsSettings legsSettings;
+
+		//[Tooltip("Affects the how and if the puppet can jump, launching themselves into the air.")]
+		//public JumpSettings jumpSettings;
 
 		[Tooltip("Automatically calculated, read-only values that represent the puppet's physical properties.")]
 		public BodyDimensions bodyDimensions;
@@ -142,13 +144,14 @@ namespace PBG.MeatPuppet {
 		#region MonoBehaviour Lifecycle
 
 		public void Start() {
+			if (configuration == null) {
+				configuration = Resources.Load<MeatPuppetConfiguration>("Default Meat Puppet Configuration");
+			}
+
 			GrowParts();
 			Movement.SetMoveTarget(initialMoveTarget);
 			Movement.SetFacingTarget(initialFacingTarget);
-			//Movement.MoveTargetTransform = initialMoveTarget;
-			//Movement.FacingTargetTransform = initialFacingTarget;
-
-
+			
 		}
 
 		public void OnEnable() {
@@ -245,8 +248,8 @@ namespace PBG.MeatPuppet {
 			
 			capsuleCollider.height = bodyDimensions.bodyHeight - hipsPosition.y * bodyDimensions.legLengthModifier;
 			capsuleCollider.center = Vector3.up * (bodyDimensions.bodyHeight - capsuleCollider.height * 0.5f);
-
-			capsuleCollider.material = MeatPuppetManager.Instance.characterPhysicMaterial;
+			
+			capsuleCollider.material = configuration.characterPhysicMaterial;
 
 			bodyDimensions.legLength = bodyDimensions.bodyHeight - capsuleCollider.height;
 		}

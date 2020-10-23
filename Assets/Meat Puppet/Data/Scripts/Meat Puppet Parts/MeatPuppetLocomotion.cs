@@ -70,10 +70,10 @@ namespace PBG.MeatPuppet {
 
 			float speedFactor = 1f;
 			if (parentPuppet.running) {
-				speedFactor = (forwardSpeedFactor / parentPuppet.movementSettings.runSpeed) * 2f;
+				speedFactor = (forwardSpeedFactor / parentPuppet.configuration.runSpeed) * 2f;
 			}
 			else {
-				speedFactor = forwardSpeedFactor / parentPuppet.movementSettings.walkSpeed;
+				speedFactor = forwardSpeedFactor / parentPuppet.configuration.walkSpeed;
 			}
 			
 			float forwardSpeed = velocity.z*speedFactor;
@@ -166,7 +166,7 @@ namespace PBG.MeatPuppet {
 			var origin = parentPuppet.GetHeadPoint() + parentPuppet.transform.forward * (parentPuppet.bodyDimensions.bodyRadius * 2f);
 			var radius = parentPuppet.bodyDimensions.bodyRadius * 0.25f;
 			var direction = Vector3.down;
-			var groundLayer = MeatPuppetManager.Instance.groundLayer;
+			var groundLayer = parentPuppet.configuration.groundLayer;
 
 			var hits = Physics.SphereCastAll(origin, radius, direction, distance, groundLayer);
 

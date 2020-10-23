@@ -97,14 +97,14 @@ namespace PBG.MeatPuppet {
 				var displacement = results.distanceToGround;
 				var direction = GetDirection();
 
-				var strength = parentPuppet.legsSettings.strength;
-				var damping = parentPuppet.legsSettings.damping;
+				var strength = parentPuppet.configuration.strength;
+				var damping = parentPuppet.configuration.damping;
 
 				if (useAirborneStrength) {
 					airborneStrengthTimer -= Time.deltaTime;
 					useAirborneStrength = airborneStrengthTimer > 0f;
-					strength = parentPuppet.legsSettings.airborneStrength;
-					damping = parentPuppet.legsSettings.airborneDamping;
+					strength = parentPuppet.configuration.airborneStrength;
+					damping = parentPuppet.configuration.airborneDamping;
 				}
 
 				if (displacement > 0) {
@@ -121,7 +121,7 @@ namespace PBG.MeatPuppet {
 
 				parentPuppet.Locomotion.SetIgnoreVelocity(Vector3.zero);
 				parentPuppet.Locomotion.SetIgnoreTurnSpeed(Vector3.zero);
-				if (parentPuppet.legsSettings.inheritGroundsVelocity && !raycastHit.collider.gameObject.isStatic) {
+				if (parentPuppet.configuration.inheritGroundsVelocity && !raycastHit.collider.gameObject.isStatic) {
 					// handle each case:
 					// other object is a dynamic rigidbody
 					// other object is a kinematic rigidbody
@@ -150,7 +150,7 @@ namespace PBG.MeatPuppet {
 					}
 				}
 
-				//float newModifier = 1f - (1f - raycastHit.normal.y) * parentPuppet.legsSettings.slopeSpeedModifier;
+				//float newModifier = 1f - (1f - raycastHit.normal.y) * parentPuppet.configuration.slopeSpeedModifier;
 				//slopeSpeedModifier = slopeSpeedModifier + (newModifier - slopeSpeedModifier) * 0.4f;
 
 				UpdateGrounded( true );
@@ -207,7 +207,7 @@ namespace PBG.MeatPuppet {
 			var origin = parentPuppet.GetPelvisPoint();
 			var radius = parentPuppet.bodyDimensions.bodyRadius * 0.25f;
 			var direction = GetDirection();
-			var groundLayer = MeatPuppetManager.Instance.groundLayer;
+			var groundLayer = parentPuppet.configuration.groundLayer;
 
 			var hits = Physics.SphereCastAll(origin, radius, direction, distanceToCast, groundLayer);
 
@@ -236,13 +236,13 @@ namespace PBG.MeatPuppet {
 
 			}
 
-			results.offset = (Physics.gravity.y) / parentPuppet.legsSettings.strength;
+			results.offset = (Physics.gravity.y) / parentPuppet.configuration.strength;
 
 			if (useAirborneStrength) {
-				results.offset = (Physics.gravity.y) / parentPuppet.legsSettings.airborneStrength;
+				results.offset = (Physics.gravity.y) / parentPuppet.configuration.airborneStrength;
 			}
 
-			float targetPosition = results.offset + parentPuppet.legsSettings.offset + parentPuppet.transform.position.y;
+			float targetPosition = results.offset + parentPuppet.configuration.offset + parentPuppet.transform.position.y;
 			float groundPoint = raycastHit.point.y;
 			// sometimes the collision result will return Vector3.zero, which does us no good
 			if (raycastHit.point == Vector3.zero) {

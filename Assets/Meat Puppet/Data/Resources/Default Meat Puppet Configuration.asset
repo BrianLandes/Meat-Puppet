@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad96304d71c0ae1428fe660d9961a744, type: 3}
+  m_Name: Default Meat Puppet Configuration
+  m_EditorClassIdentifier: 
+  meatPuppetAnimationController: {fileID: 9100000, guid: bf977716264dd8e4791f20f88799b8fc,
+    type: 2}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  staticLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  characterPhysicMaterial: {fileID: 13400000, guid: 3cf660285214f9d47a289fbef286a074,
+    type: 2}
+  walkSpeed: 4
+  runSpeed: 6
+  stoppingDistance: 0.7
+  moveAcceleration: 4
+  disableMovementWhenUngrounded: 0
+  brakeFactor: 1
+  turnForce: 1.5
+  turnDampening: 80
+  preciseTurnForce: 100
+  navAgentAllowedDistance: 0.4
+  facingTolerance: 0.1
+  strength: 104.79
+  damping: 387.6
+  airborneStrength: 250
+  airborneDamping: 1660
+  offset: 0
+  slopeSpeedModifier: 1.8
+  inheritGroundsVelocity: 1
+  enableJump: 1
+  initialJumpForce: 6
+  jumpDelay: 0.38
+  useJumpBoost: 1
+  jumpBoostTime: 0.6
+  boostForce: 15

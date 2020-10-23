@@ -6,50 +6,50 @@ using UnityEngine.AI;
 using UnityEngine.Serialization;
 
 namespace PBG.MeatPuppet {
-	/// <summary>
-	/// A serializable data class for sharing values/settings between the Movement component and its parent puppet.
-	/// </summary>
-	[Serializable]
-	public class MovementSettings {
+	///// <summary>
+	///// A serializable data class for sharing values/settings between the Movement component and its parent puppet.
+	///// </summary>
+	//[Serializable]
+	//public class MovementSettings {
 		
-		[Header("Basics")]
-		[Tooltip("The top speed this puppet can move while walking, in Unity units.")]
-		public float walkSpeed = 4f;
+	//	[Header("Basics")]
+	//	[Tooltip("The top speed this puppet can move while walking, in Unity units.")]
+	//	public float walkSpeed = 4f;
 
-		[Tooltip("The top speed this puppet can move while running, in Unity units.")]
-		public float runSpeed = 6f;
+	//	[Tooltip("The top speed this puppet can move while running, in Unity units.")]
+	//	public float runSpeed = 6f;
 
-		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
-		public float stoppingDistance = 0.7f;
+	//	[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
+	//	public float stoppingDistance = 0.7f;
 		
-		//[NonSerialized] public bool avoidStaticObstacles = false; // experimental feature, not ready
+	//	//[NonSerialized] public bool avoidStaticObstacles = false; // experimental feature, not ready
 
-		[Header("Advanced")]
-		[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
-		public float moveAcceleration = 4f;
+	//	[Header("Advanced")]
+	//	[Tooltip("The max force or acceleration applied to get the puppet to top speed.")]
+	//	public float moveAcceleration = 4f;
 
-		[Tooltip("Whether or not to disable movement when the puppet does not have their feet on the ground.")]
-		public bool disableMovementWhenUngrounded = false;
+	//	[Tooltip("Whether or not to disable movement when the puppet does not have their feet on the ground.")]
+	//	public bool disableMovementWhenUngrounded = false;
 
-		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
-		public float brakeFactor = 1f;
+	//	[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
+	//	public float brakeFactor = 1f;
 
-		[Tooltip("The amount of angular force applied to turn the puppet.")]
-		public float turnForce = 1.5f;
+	//	[Tooltip("The amount of angular force applied to turn the puppet.")]
+	//	public float turnForce = 1.5f;
 
-		[Tooltip("The amount of dampening to apply when turning (reduces elasticity).")]
-		public float turnDampening = 80f;
+	//	[Tooltip("The amount of dampening to apply when turning (reduces elasticity).")]
+	//	public float turnDampening = 80f;
 
-		[Tooltip("The turn force to use when the puppet is kinematic.")]
-		public float preciseTurnForce = 100f;
+	//	[Tooltip("The turn force to use when the puppet is kinematic.")]
+	//	public float preciseTurnForce = 100f;
 
-		[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
-		public float navAgentAllowedDistance = 0.4f;
+	//	[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
+	//	public float navAgentAllowedDistance = 0.4f;
 
-		[Tooltip("The threshold to use when determining if the puppet has reached the target facing position.")]
-		public float facingTolerance = 0.1f;
+	//	[Tooltip("The threshold to use when determining if the puppet has reached the target facing position.")]
+	//	public float facingTolerance = 0.1f;
 
-	}
+	//}
 
 	[AddComponentMenu("")]
 	/// <summary>
@@ -187,7 +187,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		public bool ReachedTarget() {
-			var distance = Mathf.Max(0.01f, parentPuppet.movementSettings.stoppingDistance);
+			var distance = Mathf.Max(0.01f, parentPuppet.configuration.stoppingDistance);
 			return IsDistanceToTargetLessThan(distance);
 		}
 
@@ -238,9 +238,9 @@ namespace PBG.MeatPuppet {
 			
 			UpdateNavAgent();
 
-			if (!parentPuppet.movementSettings.disableMovementWhenUngrounded || parentPuppet.Legs.IsGrounded) {
+			if (!parentPuppet.configuration.disableMovementWhenUngrounded || parentPuppet.Legs.IsGrounded) {
 				// if we have a target and we're close to that target and we want to be ~exactly on top of that target -> use 'fake' movement
-				if (hasMoveTarget && parentPuppet.movementSettings.stoppingDistance <= minStoppingDistance && IsDistanceToTargetLessThan(1f)) {
+				if (hasMoveTarget && parentPuppet.configuration.stoppingDistance <= minStoppingDistance && IsDistanceToTargetLessThan(1f)) {
 					// 'fake' the movement in order to get us exactly to that position
 					UpdatePositionUsingPreciseMovement();
 				}
@@ -287,7 +287,7 @@ namespace PBG.MeatPuppet {
 		//	//	moveVector = ModifyMoveVectorForAvoidance(moveVector);
 		//	//}
 
-		//	//if (parentPuppet.movementSettings.avoidStaticObstacles) {
+		//	//if (parentPuppet.configuration.avoidStaticObstacles) {
 		//	//	moveVector = GetVectorToAvoidStaticObstacles(moveVector);
 		//	//}
 
@@ -348,10 +348,10 @@ namespace PBG.MeatPuppet {
 
 		private float GetTopSpeed() {
 			if (parentPuppet.running) {
-				return parentPuppet.movementSettings.runSpeed;
+				return parentPuppet.configuration.runSpeed;
 			}
 			else {
-				return parentPuppet.movementSettings.walkSpeed;
+				return parentPuppet.configuration.walkSpeed;
 			}
 		}
 		
@@ -368,10 +368,10 @@ namespace PBG.MeatPuppet {
 
 			navAgent.enabled = false;
 			navAgent.speed = GetTopSpeed();
-			navAgent.acceleration = parentPuppet.movementSettings.moveAcceleration * Time.fixedDeltaTime;
+			navAgent.acceleration = parentPuppet.configuration.moveAcceleration * Time.fixedDeltaTime;
 			//navMeshAgent.angularSpeed = 270f;
 			//navMeshAgent.acceleration = speed * 1.99f;
-			navAgent.stoppingDistance = parentPuppet.movementSettings.stoppingDistance;
+			navAgent.stoppingDistance = parentPuppet.configuration.stoppingDistance;
 
 			// Don't update position automatically, we'll handle it through the rigid body
 			navAgent.updatePosition = false;
@@ -402,9 +402,9 @@ namespace PBG.MeatPuppet {
 
 				// for issue #1 -> check that the two positions are within some threshold
 				if ( !MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(navAgent.nextPosition, transform.position,
-					parentPuppet.movementSettings.navAgentAllowedDistance) ) { 
+					parentPuppet.configuration.navAgentAllowedDistance) ) { 
 				//if ((navAgent.nextPosition - transform.position).sqrMagnitude > 
-				//		parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+				//		parentPuppet.configuration.navAgentAllowedDistance * parentPuppet.configuration.navAgentAllowedDistance) {
 
 					// if they are not -> teleport the navagent to our position
 					navAgent.enabled = false;
@@ -413,20 +413,20 @@ namespace PBG.MeatPuppet {
 				
 				navAgent.enabled = true;
 				navAgent.destination = GetMoveTargetPoint();
-				navAgent.stoppingDistance = parentPuppet.movementSettings.stoppingDistance;
+				navAgent.stoppingDistance = parentPuppet.configuration.stoppingDistance;
 
 				// Force the simulated navAgent to maintain the same speed as the actual body
 				navAgent.velocity = parentPuppet.Rigidbody.velocity;
 				
 				navAgent.speed = GetTopSpeed();
-				navAgent.acceleration = parentPuppet.movementSettings.moveAcceleration * Time.fixedDeltaTime;
+				navAgent.acceleration = parentPuppet.configuration.moveAcceleration * Time.fixedDeltaTime;
 
 				// for issue #2 -> check the two positions AGAIN, and if they are not the same at this point
 				//    we can assume that the puppet is stuck off the navmesh
 				if ( !MeatPuppetToolKit.PointAndPointWithinDistanceOfEachOther(navAgent.nextPosition, transform.position,
-						parentPuppet.movementSettings.navAgentAllowedDistance)) {
+						parentPuppet.configuration.navAgentAllowedDistance)) {
 				//if ((navAgent.nextPosition - transform.position).sqrMagnitude >
-				//		parentPuppet.movementSettings.navAgentAllowedDistance * parentPuppet.movementSettings.navAgentAllowedDistance) {
+				//		parentPuppet.configuration.navAgentAllowedDistance * parentPuppet.configuration.navAgentAllowedDistance) {
 
 					// TODO: if they are not -> teleport the navagent to our position
 
@@ -525,7 +525,7 @@ namespace PBG.MeatPuppet {
 			var idealVelocity = moveVector * GetTopSpeed();
 
 			// modify the speed
-			// idealVelocity *= parentPuppet.movementSettings.moveSpeedModifier;
+			// idealVelocity *= parentPuppet.configuration.moveSpeedModifier;
 			idealVelocity *= parentPuppet.Locomotion.GetSlopeSpeedModifier();
 
 			var currentVelocity = parentPuppet.Rigidbody.velocity.DropY();
@@ -539,13 +539,13 @@ namespace PBG.MeatPuppet {
 			// if the unit is going in the wrong direction.
 			var idealDifference = idealVelocity - currentVelocity;
 			idealDifference.y = 0;
-			var movementForce = idealDifference * parentPuppet.movementSettings.moveAcceleration;
-			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.moveAcceleration, ForceMode.Acceleration);
+			var movementForce = idealDifference * parentPuppet.configuration.moveAcceleration;
+			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.configuration.moveAcceleration, ForceMode.Acceleration);
 
 			var movementForceDifference = movementForce - lastMovementForce;
 			//var idealDifference = -parentPuppet.Rigidbody.velocity;
 			movementForceDifference.y = 0;
-			parentPuppet.Rigidbody.AddForce(-movementForceDifference * parentPuppet.movementSettings.brakeFactor, ForceMode.Acceleration);
+			parentPuppet.Rigidbody.AddForce(-movementForceDifference * parentPuppet.configuration.brakeFactor, ForceMode.Acceleration);
 
 			lastMovementForce = movementForce;
 		}
@@ -556,7 +556,7 @@ namespace PBG.MeatPuppet {
 		private void ApplyBrakeForce() {
 			var idealDifference = -parentPuppet.Rigidbody.velocity;
 			idealDifference.y = 0;
-			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.movementSettings.brakeFactor, ForceMode.Acceleration);
+			parentPuppet.Rigidbody.AddForce(idealDifference * parentPuppet.configuration.brakeFactor, ForceMode.Acceleration);
 
 		}
 
@@ -569,24 +569,24 @@ namespace PBG.MeatPuppet {
 			float difference = DifferenceBetweenGivenFacingAndCurrentFacing(xzVector);
 
 			if (parentPuppet.Rigidbody.isKinematic) {
-				if (difference > parentPuppet.movementSettings.facingTolerance) {
+				if (difference > parentPuppet.configuration.facingTolerance) {
 					difference = Mathf.Max(difference, 1);
 				}
-				else if (difference < -parentPuppet.movementSettings.facingTolerance) {
+				else if (difference < -parentPuppet.configuration.facingTolerance) {
 					difference = Mathf.Min(difference, -1);
 				}
 				parentPuppet.Rigidbody.MoveRotation(parentPuppet.Rigidbody.rotation * 
-					Quaternion.Euler(0, difference * parentPuppet.movementSettings.preciseTurnForce * Time.deltaTime, 0));
+					Quaternion.Euler(0, difference * parentPuppet.configuration.preciseTurnForce * Time.deltaTime, 0));
 			}
 			else {
 
 				// add turning force
-				parentPuppet.Rigidbody.AddTorque(0, difference * parentPuppet.movementSettings.turnForce, 0, ForceMode.Acceleration);
+				parentPuppet.Rigidbody.AddTorque(0, difference * parentPuppet.configuration.turnForce, 0, ForceMode.Acceleration);
 
 				// apply turning dampening (to prevent elasticity)
 				float changeInDifference = difference - lastTurnDifference;
 
-				var damping = parentPuppet.movementSettings.turnDampening;
+				var damping = parentPuppet.configuration.turnDampening;
 				parentPuppet.Rigidbody.AddTorque(0, changeInDifference * damping, 0, ForceMode.Acceleration);
 
 			}
@@ -610,13 +610,13 @@ namespace PBG.MeatPuppet {
 		//		var perpendicularVector = Quaternion.Euler(0, 90, 0) * moveVector;
 		//		if (!CastForObstacle(perpendicularVector, layer, out var raycastHitRight, bodyRadiusMod: 1f)) {
 
-		//			var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
+		//			var avoidVector = perpendicularVector * parentPuppet.configuration.avoidanceForce;
 		//			return (moveVector + avoidVector) * 0.5f;
 		//		} else {
 		//			perpendicularVector = Quaternion.Euler(0, -90, 0) * moveVector;
 		//			if (!CastForObstacle(perpendicularVector, layer, out var raycastHitLeft, bodyRadiusMod: 1f)) {
 
-		//				var avoidVector = perpendicularVector * parentPuppet.movementSettings.avoidanceForce;
+		//				var avoidVector = perpendicularVector * parentPuppet.configuration.avoidanceForce;
 		//				return (moveVector + avoidVector) * 0.5f;
 		//			}
 		//		}

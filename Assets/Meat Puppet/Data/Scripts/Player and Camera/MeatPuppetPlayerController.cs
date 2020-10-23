@@ -32,7 +32,7 @@ namespace PBG.MeatPuppet {
 				puppet.Movement.RemoveFacingTarget();
 			}
 			
-			if (puppet.jumpSettings.enableJump) {
+			if (puppet.configuration.enableJump) {
 				if (Input.GetButtonDown("Jump")) {
 					puppet.Jump.Launch();
 				}

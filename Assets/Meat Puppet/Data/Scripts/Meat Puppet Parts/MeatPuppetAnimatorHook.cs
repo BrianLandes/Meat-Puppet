@@ -110,7 +110,7 @@ namespace PBG.MeatPuppet {
 		}
 
 		public void AssignAnimationController() {
-			var animationController = MeatPuppetManager.Instance.meatPuppetAnimationController;
+			var animationController = GetComponent<MeatPuppet>().configuration.meatPuppetAnimationController;
 			// use the animation controller from the manager
 			// create an override controller over it
 			animatorOverrideController = new AnimatorOverrideController(animationController);

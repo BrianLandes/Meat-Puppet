@@ -8,7 +8,7 @@ namespace PBG.MeatPuppet {
 	public class JumpSettings {
 		public bool enableJump = true;
 		[NonSerialized] public float initialJumpForce = 6.0f;
-		[NonSerialized] public float jumpDelay = 0.3f;
+		[NonSerialized] public float jumpDelay = 0.38f;
 		public bool useJumpBoost = true;
 		[NonSerialized] public float jumpBoostTime = 0.6f;
 		[NonSerialized] public float boostForce = 15f;

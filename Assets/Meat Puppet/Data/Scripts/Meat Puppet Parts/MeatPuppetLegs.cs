@@ -96,26 +96,27 @@ namespace PBG.MeatPuppet {
 				
 				var displacement = results.distanceToGround;
 				var direction = GetDirection();
-				
+
 				var strength = parentPuppet.legsSettings.strength;
 				var damping = parentPuppet.legsSettings.damping;
-				
+
 				if (useAirborneStrength) {
 					airborneStrengthTimer -= Time.deltaTime;
 					useAirborneStrength = airborneStrengthTimer > 0f;
 					strength = parentPuppet.legsSettings.airborneStrength;
 					damping = parentPuppet.legsSettings.airborneDamping;
 				}
-				parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength), ForceMode.Acceleration);
 
-				//Debug.DrawRay(parentPuppet.transform.position + Vector3.right, -GetDirection() * displacement * strength * 0.01f);
+				if (displacement > 0) {
+					
+					parentPuppet.Rigidbody.AddForce(-direction * (displacement * strength), ForceMode.Acceleration);
 
-				//apply a damping force, proportional to the velocity
-				float changeInDisplacement = displacement - lastDisplacement;
+					//apply a damping force, proportional to the velocity
+					float changeInDisplacement = displacement - lastDisplacement;
 
-				parentPuppet.Rigidbody.AddForce(-direction * (changeInDisplacement * damping), ForceMode.Acceleration);
-				//Debug.DrawRay(parentPuppet.transform.position + Vector3.forward, -direction * changeInDisplacement * strength * 0.01f, Color.yellow);
-
+					parentPuppet.Rigidbody.AddForce(-direction * (changeInDisplacement * damping), ForceMode.Acceleration);
+				}
+				
 				lastDisplacement = displacement;
 
 				parentPuppet.Locomotion.SetIgnoreVelocity(Vector3.zero);

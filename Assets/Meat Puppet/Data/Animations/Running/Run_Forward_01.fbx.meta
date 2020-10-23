@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c70384743740c4b4597343de20f9dc78
+guid: cf0bb00f05225d948be4ff2299f5c809
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -220,13 +220,13 @@ ModelImporter:
     100428: RightUpperLid
     100430: RightUpperLidAdjust
     100432: RightUpperLidAdjust_end
-    100434: Spine
-    100436: Spine1
-    100438: Spine1Adjust
-    100440: Spine1Adjust_end
-    100442: SpineAdjust
-    100444: SpineAdjust_end
-    100446: //RootNode
+    100434: //RootNode
+    100436: Spine
+    100438: Spine1
+    100440: Spine1Adjust
+    100442: Spine1Adjust_end
+    100444: SpineAdjust
+    100446: SpineAdjust_end
     100448: Tongue01
     100450: Tongue02
     100452: Tongue02_end
@@ -453,13 +453,13 @@ ModelImporter:
     400428: RightUpperLid
     400430: RightUpperLidAdjust
     400432: RightUpperLidAdjust_end
-    400434: Spine
-    400436: Spine1
-    400438: Spine1Adjust
-    400440: Spine1Adjust_end
-    400442: SpineAdjust
-    400444: SpineAdjust_end
-    400446: //RootNode
+    400434: //RootNode
+    400436: Spine
+    400438: Spine1
+    400440: Spine1Adjust
+    400442: Spine1Adjust_end
+    400444: SpineAdjust
+    400446: SpineAdjust_end
     400448: Tongue01
     400450: Tongue02
     400452: Tongue02_end
@@ -469,7 +469,7 @@ ModelImporter:
     400460: UpperLips
     400462: UpperLipsAdjust
     400464: UpperLipsAdjust_end
-    7400000: T-Pose
+    7400000: Run_Forward_01
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -498,7 +498,35 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Run_Forward_01
+      takeName: Run Forward
+      firstFrame: 0
+      lastFrame: 21
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0.5
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 1
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
@@ -533,8 +561,8 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  importAnimation: 0
-  copyAvatar: 0
+  importAnimation: 1
+  copyAvatar: 1
   humanDescription:
     serializedVersion: 2
     human:
@@ -2159,7 +2187,8 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: c70384743740c4b4597343de20f9dc78,
+    type: 3}
   animationType: 3
   humanoidOversampling: 1
   additionalBone: 0

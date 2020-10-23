@@ -235,9 +235,15 @@ namespace PBG.MeatPuppet {
 				bounds.Encapsulate(meshRenderer.bounds);
 			}
 
-			bodyDimensions.bodyRadius = capsuleCollider.radius = bounds.extents.z / transform.localScale.z;
-			bodyDimensions.bodyHeight = bounds.size.y / transform.localScale.y;
-			capsuleCollider.height = bodyDimensions.bodyHeight * bodyDimensions.torsoBodyRatio;
+			bodyDimensions.bodyRadius = capsuleCollider.radius = (bounds.extents.z / transform.localScale.z) * bodyDimensions.bodyWidthModifier;
+			bodyDimensions.bodyHeight = (bounds.size.y / transform.localScale.y) * bodyDimensions.bodyHeightModifier;
+
+			// use the position of the hips bone to determine where the lower body and upper body meet each other
+
+			var hips = AnimatorHook.Animator.GetBoneTransform(HumanBodyBones.Hips); // TODO: do this after the animator has been setup (ie: when UMA is done)
+			var hipsPosition = transform.InverseTransformPoint(hips.position);
+			
+			capsuleCollider.height = bodyDimensions.bodyHeight - hipsPosition.y * bodyDimensions.legLengthModifier;
 			capsuleCollider.center = Vector3.up * (bodyDimensions.bodyHeight - capsuleCollider.height * 0.5f);
 
 			capsuleCollider.material = MeatPuppetManager.Instance.characterPhysicMaterial;
@@ -282,9 +288,13 @@ namespace PBG.MeatPuppet {
 		[Tooltip("Whether or not to calculate and set the puppet's body dimensions on start.")]
 		public bool autoConfigure = true;
 
+		public float bodyHeightModifier = 0.9f;
+		public float bodyWidthModifier = 0.9f;
+		public float legLengthModifier = 0.9f;
+
 		[Header("Auto-configure settings")]
-		[Tooltip("The ratio of the puppet's height to use for the body. (The remainder of the height will be the length of the legs.)")]
-		public float torsoBodyRatio = 0.7f;
+		//[Tooltip("The ratio of the puppet's height to use for the body. (The remainder of the height will be the length of the legs.)")]
+		//public float torsoBodyRatio = 0.7f;
 
 		[Tooltip("The puppet's density. Used to set the mass on the rigidbody after calculating volume of body.")]
 		[NonSerialized] public float density = 20f;

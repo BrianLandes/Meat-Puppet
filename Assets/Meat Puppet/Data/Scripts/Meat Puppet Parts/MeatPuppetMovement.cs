@@ -20,7 +20,7 @@ namespace PBG.MeatPuppet {
 		public float runSpeed = 6f;
 
 		[Tooltip("The distance allowed between the puppet and the destination before stopping.")]
-		[NonSerialized] public float stoppingDistance = 0.7f;
+		public float stoppingDistance = 0.7f;
 		
 		//[NonSerialized] public bool avoidStaticObstacles = false; // experimental feature, not ready
 
@@ -32,7 +32,7 @@ namespace PBG.MeatPuppet {
 		public bool disableMovementWhenUngrounded = false;
 
 		[Tooltip("The amount of force applied AGAINST the puppet in order to bring it to a stop. It is a factor of the puppet's velocity.")]
-		[NonSerialized] public float brakeFactor = 1f;
+		public float brakeFactor = 1f;
 
 		[Tooltip("The amount of angular force applied to turn the puppet.")]
 		public float turnForce = 1.5f;
@@ -41,13 +41,13 @@ namespace PBG.MeatPuppet {
 		public float turnDampening = 80f;
 
 		[Tooltip("The turn force to use when the puppet is kinematic.")]
-		[NonSerialized] public float preciseTurnForce = 100f;
+		public float preciseTurnForce = 100f;
 
 		[Tooltip("Allowed distance between the actual position and the navAgent's position.")]
 		public float navAgentAllowedDistance = 0.4f;
 
 		[Tooltip("The threshold to use when determining if the puppet has reached the target facing position.")]
-		[NonSerialized] public float facingTolerance = 0.1f;
+		public float facingTolerance = 0.1f;
 
 	}
 

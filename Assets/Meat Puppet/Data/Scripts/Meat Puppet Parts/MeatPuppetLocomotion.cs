@@ -86,7 +86,8 @@ namespace PBG.MeatPuppet {
 			lastHorizontalSpeed = Mathf.Lerp(lastHorizontalSpeed, horizontalSpeed, horizontalSpeedSmoothing* Time.deltaTime);
 			parentPuppet.AnimatorHook.Animator.SetFloat(horizontalSpeedKey, lastHorizontalSpeed);
 
-			parentPuppet.AnimatorHook.Animator.SetFloat(turnSpeedKey, lastAngularSpeed.y * turnSpeedFactor, turnSpeedSmoothing, Time.deltaTime);
+			var turnSpeed = lastAngularSpeed.y * turnSpeedFactor;
+			parentPuppet.AnimatorHook.Animator.SetFloat(turnSpeedKey, turnSpeed, turnSpeedSmoothing, Time.deltaTime);
 
 			float groundSteep = CalculateGroundSteep();
 			// if groundSteep > 0 -> reduce speedModifer from 1f -> 0f
@@ -95,6 +96,8 @@ namespace PBG.MeatPuppet {
 			parentPuppet.AnimatorHook.Animator.SetFloat(groundSteepKey, groundSteep, turnSpeedSmoothing, Time.deltaTime);
 
 			//parentPuppet.AnimatorHook.Animator.SetFloat("Acceleration", acceleration);
+
+			parentPuppet.AnimatorHook.Animator.SetFloat("Any Speed", Mathf.Abs(horizontalSpeed) + Mathf.Abs(forwardSpeed) + Mathf.Abs(turnSpeed));
 		}
 
 		private void UpdateRelativeSpeeds() {

@@ -137,7 +137,8 @@ namespace PBG.MeatPuppet {
 		/// Allows other scripts and systems to cause the puppet to play arbitrary animations; either looping animations or 'one-shot' animations.
 		/// </summary>
 		public MeatPuppetAnimation Animation { get; private set; }
-		
+
+		public MeatPuppetFeet Feet { get; private set; }
 
 		#endregion
 
@@ -160,7 +161,8 @@ namespace PBG.MeatPuppet {
 
 		private void LateUpdate() {
 			Locomotion.Update();
-			
+			//Feet.Update();
+
 		}
 
 		private void FixedUpdate() {
@@ -199,6 +201,8 @@ namespace PBG.MeatPuppet {
 			Locomotion = new MeatPuppetLocomotion(this);
 
 			Legs = new MeatPuppetLegs(this);
+
+			//Feet = new MeatPuppetFeet(this);
 
 			var animator = gameObject.GetComponentInChildren<Animator>();
 			AnimatorHook = animator.gameObject.AddComponent<MeatPuppetAnimatorHook>();

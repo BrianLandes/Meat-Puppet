@@ -1,4 +1,5 @@
 ﻿
+using UnityEditor;
 using UnityEngine;
 
 public class ParameterStudioDriver : MonoBehaviour {
@@ -124,5 +125,6 @@ public class ParameterStudioDriver : MonoBehaviour {
 
 
 		animator.SetFloat("Any Speed", Mathf.Abs(horizontalSpeed) + Mathf.Abs(forwardSpeed) + Mathf.Abs(turnSpeed) );
+
 	}
 }
